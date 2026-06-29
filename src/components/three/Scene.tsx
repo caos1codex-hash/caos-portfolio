@@ -33,13 +33,13 @@ function SceneContent({ onCoinClick }: SceneContentProps) {
       camera={{ position: [0, 0, 5], fov: 60 }}
       gl={{
         antialias: true,
-        alpha: false,
+        alpha: true,
         powerPreference: 'high-performance',
       }}
       dpr={[1, 2]}
-      style={{ background: '#000000' }}
+      style={{ background: 'transparent' }}
     >
-      <fog attach="fog" args={['#000000', 3, 12]} />
+      <fog attach="fog" args={['#050a18', 3, 12]} />
 
       {/* Ambient lighting for the coin */}
       <ambientLight intensity={0.3} />
