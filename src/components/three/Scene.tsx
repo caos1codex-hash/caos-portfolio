@@ -39,7 +39,7 @@ function SceneContent({ onCoinClick }: SceneContentProps) {
       dpr={[1, 2]}
       style={{ background: 'transparent' }}
     >
-      <fog attach="fog" args={['#050a18', 3, 12]} />
+      <fog attach="fog" args={['#0a0a0f', 3, 12]} />
 
       {/* Ambient lighting for the coin */}
       <ambientLight intensity={0.3} />
