@@ -83,14 +83,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, delay: 0.3 }}
           >
-            {/* Central blue glow */}
+            {/* Central glow (disabled - flat black) */}
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{
                 width: '600px',
                 height: '300px',
                 background:
-                  'radial-gradient(ellipse at center, rgba(0,255,136,0.12) 0%, rgba(0,255,136,0.04) 40%, transparent 70%)',
+                  'radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
             />
@@ -113,7 +113,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 width: '120%',
                 height: '200%',
                 background:
-                  'radial-gradient(ellipse at center, rgba(0,255,136,0.25) 0%, transparent 60%)',
+                  'radial-gradient(ellipse at center, rgba(255,255,255,0) 0%, transparent 60%)',
                 filter: 'blur(60px)',
               }}
               initial={{ opacity: 0, scale: 0.8 }}

@@ -77,8 +77,8 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-      {/* ─── Atmospheric Background ──────────────────────────────────────── */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* ─── Atmospheric Background (disabled - flat black) ──────────── */}
+      <div className="absolute inset-0 pointer-events-none" style={{ visibility: 'hidden' }}>
         {/* Central radial glow */}
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"

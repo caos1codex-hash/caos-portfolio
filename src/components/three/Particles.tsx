@@ -82,11 +82,11 @@ export default function Particles() {
     const ph = new Float32Array(PARTICLE_COUNT);
     const col = new Float32Array(PARTICLE_COUNT * 3);
 
-    // Color palette: emerald, purple, teal-green
+    // Color palette: invisible (flat black background)
     const palette = [
-      new THREE.Color('#00ff88'),
-      new THREE.Color('#8b5cf6'),
-      new THREE.Color('#00ffaa'),
+      new THREE.Color('#000000'),
+      new THREE.Color('#000000'),
+      new THREE.Color('#000000'),
     ];
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
