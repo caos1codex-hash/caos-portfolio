@@ -29,10 +29,13 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Build with Next.js
+      - name: Build with Next.js (Static Export)
         run: bun run build
         env:
-          NEXT_STATIC_EXPORT: true
+          NEXT_STATIC_EXPORT: "true"
+
+      - name: Add .nojekyll
+        run: touch ./out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

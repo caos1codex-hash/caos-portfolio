@@ -7,6 +7,31 @@ import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 import SectionReveal from '@/components/effects/SectionReveal';
 
+// Language color mapping
+const LANGUAGE_COLORS: Record<string, string> = {
+  JavaScript: '#f7df1e',
+  TypeScript: '#3178c6',
+  Python: '#3572A5',
+  Java: '#b07219',
+  'C#': '#178600',
+  'C++': '#f34b7d',
+  C: '#555555',
+  PHP: '#4F5D95',
+  Ruby: '#701516',
+  Go: '#00ADD8',
+  Rust: '#dea584',
+  Swift: '#F05138',
+  Kotlin: '#A97BFF',
+  Dart: '#00B4AB',
+  HTML: '#e34c26',
+  CSS: '#563d7c',
+  Shell: '#89e051',
+  Vue: '#41b883',
+  Svelte: '#ff3e00',
+  Lua: '#000080',
+  R: '#198CE7',
+};
+
 interface GitHubRepo {
   id: number;
   name: string;
@@ -25,23 +50,6 @@ interface GitHubRepo {
   size: number;
   hasDemo: boolean;
   license: string | null;
-}
-
-interface GitHubResponse {
-  user: {
-    login: string;
-    avatarUrl: string;
-    url: string;
-    name: string | null;
-    bio: string | null;
-    publicRepos: number;
-    followers: number;
-    following: number;
-    since: string;
-  } | null;
-  repos: GitHubRepo[];
-  total: number;
-  error?: string;
 }
 
 function ProjectSkeleton() {
@@ -255,11 +263,44 @@ export default function Projects() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/github');
+      // Fetch directly from GitHub API (works in both dev and static export)
+      const headers: Record<string, string> = {
+        Accept: 'application/vnd.github.v3+json',
+      };
+
+      const res = await fetch(
+        'https://api.github.com/users/caos1codex-hash/repos?sort=updated&per_page=100&type=owner',
+        { headers }
+      );
+
       if (!res.ok) throw new Error('Error al cargar los proyectos');
-      const data: GitHubResponse = await res.json();
-      if (data.error) throw new Error(data.error);
-      setRepos(data.repos || []);
+
+      const reposData = await res.json();
+
+      // Filter and transform
+      const filtered = reposData
+        .filter((repo: Record<string, unknown>) => !repo.fork && !repo.archived)
+        .map((repo: Record<string, unknown>) => ({
+          id: repo.id,
+          name: repo.name,
+          fullName: repo.full_name,
+          description: repo.description || 'Sin descripción',
+          url: repo.html_url,
+          homepage: repo.homepage,
+          language: repo.language,
+          languageColor: LANGUAGE_COLORS[(repo.language as string)] || '#8b8b8b',
+          forks: repo.forks_count,
+          stars: repo.stargazers_count,
+          topics: repo.topics || [],
+          createdAt: repo.created_at,
+          updatedAt: repo.updated_at,
+          pushedAt: repo.pushed_at,
+          size: repo.size,
+          hasDemo: !!(repo.homepage && String(repo.homepage).trim() !== ''),
+          license: (repo.license as Record<string, string>)?.spdx_id || null,
+        }));
+
+      setRepos(filtered);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
