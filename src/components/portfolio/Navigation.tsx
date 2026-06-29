@@ -1,149 +1,118 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect, useCallback } from 'react';
+import { Menu, X } from 'lucide-react';
+import gsap from 'gsap';
 
 const NAV_ITEMS = [
-  { label: "Inicio", href: "#hero" },
-  { label: "Sobre Mí", href: "#about" },
-  { label: "Tecnologías", href: "#technologies" },
-  { label: "Habilidades", href: "#skills" },
-  { label: "Servicios", href: "#services" },
-  { label: "Experiencia", href: "#experience" },
-  { label: "Proyectos", href: "#projects" },
-  { label: "Roadmap", href: "#roadmap" },
-  { label: "Logros", href: "#achievements" },
-  { label: "Contacto", href: "#contact" },
+  { label: 'Inicio', href: '#hero' },
+  { label: 'Sobre Mí', href: '#about' },
+  { label: 'Skills', href: '#skills' },
+  { label: 'Proyectos', href: '#projects' },
+  { label: 'Contacto', href: '#contact' },
 ];
 
 export default function Navigation() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [active, setActive] = useState('hero');
+  const mobileItemsRef = useRef<HTMLButtonElement[]>([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-
-      // Determine active section
-      const sections = NAV_ITEMS.map((item) =>
-        item.href.replace("#", "")
-      );
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 200) {
-            setActiveSection(sections[i]);
-            break;
-          }
+    const onScroll = () => {
+      setScrolled(window.scrollY > 50);
+      for (let i = NAV_ITEMS.length - 1; i >= 0; i--) {
+        const el = document.getElementById(NAV_ITEMS[i].href.slice(1));
+        if (el && el.getBoundingClientRect().top <= 200) {
+          setActive(NAV_ITEMS[i].href.slice(1));
+          break;
         }
       }
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleClick = (href: string) => {
-    setIsMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  useEffect(() => {
+    if (!mobileOpen) return;
+    gsap.fromTo(
+      mobileItemsRef.current.filter(Boolean),
+      { opacity: 0, x: -20 },
+      { opacity: 1, x: 0, duration: 0.4, stagger: 0.06, ease: 'power3.out' }
+    );
+  }, [mobileOpen]);
+
+  const handleClick = useCallback((href: string) => {
+    setMobileOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 3.2, ease: [0.25, 0.4, 0.25, 1] }}
+      {/* Desktop nav */}
+      <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? "bg-black/70 backdrop-blur-xl border-b border-white/5"
-            : "bg-transparent"
+          scrolled
+            ? 'bg-black/70 backdrop-blur-xl border-b border-white/[0.04]'
+            : 'bg-transparent'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Logo */}
+        <div className='max-w-6xl mx-auto px-6 h-16 flex items-center justify-between'>
           <button
-            onClick={() => handleClick("#hero")}
-            className="text-xl font-bold tracking-wider text-glow-blue hover:opacity-80 transition-opacity"
+            onClick={() => handleClick('#hero')}
+            className='text-lg font-bold tracking-wider text-gradient-caos hover:opacity-80 transition-opacity'
             data-cursor-hover
           >
             CAOS
           </button>
 
-          {/* Desktop Links */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className='hidden md:flex items-center gap-1'>
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.href}
                 onClick={() => handleClick(item.href)}
-                className={`relative px-3 py-2 text-sm font-medium transition-colors rounded-md ${
-                  activeSection === item.href.replace("#", "")
-                    ? "text-blue-400"
-                    : "text-white/60 hover:text-white"
+                className={`px-3 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                  active === item.href.slice(1)
+                    ? 'text-white bg-white/[0.05]'
+                    : 'text-white/50 hover:text-white'
                 }`}
                 data-cursor-hover
               >
                 {item.label}
-                {activeSection === item.href.replace("#", "") && (
-                  <motion.div
-                    layoutId="nav-active"
-                    className="absolute inset-0 bg-white/5 rounded-md"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                )}
               </button>
             ))}
           </div>
 
-          {/* Mobile Menu Toggle */}
           <button
-            className="lg:hidden p-2 text-white/60 hover:text-white"
-            onClick={() => setIsMobileOpen(!isMobileOpen)}
-            data-cursor-hover
+            className='md:hidden p-2 text-white/60 hover:text-white'
+            onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-black/95 backdrop-blur-xl pt-20 px-6"
-          >
-            <div className="flex flex-col gap-2">
-              {NAV_ITEMS.map((item, i) => (
-                <motion.button
-                  key={item.href}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => handleClick(item.href)}
-                  className={`text-left py-3 px-4 text-lg font-medium rounded-lg transition-colors ${
-                    activeSection === item.href.replace("#", "")
-                      ? "text-blue-400 bg-white/5"
-                      : "text-white/60 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {item.label}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <div className='fixed inset-0 z-40 bg-black/95 backdrop-blur-xl pt-20 px-6 md:hidden'>
+          <div className='flex flex-col gap-1'>
+            {NAV_ITEMS.map((item, i) => (
+              <button
+                key={item.href}
+                ref={(el) => { if (el) mobileItemsRef.current[i] = el; }}
+                onClick={() => handleClick(item.href)}
+                className={`text-left py-3 px-4 text-lg font-medium rounded-lg transition-colors ${
+                  active === item.href.slice(1)
+                    ? 'text-white bg-white/[0.05]'
+                    : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </>
   );
 }

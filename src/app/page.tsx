@@ -1,36 +1,29 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useCallback } from "react";
-import dynamic from "next/dynamic";
-import { AnimatePresence } from "framer-motion";
+import { useEffect, useCallback, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// Loading Screen
-import LoadingScreen from "@/components/portfolio/LoadingScreen";
+gsap.registerPlugin(ScrollTrigger);
 
-// Navigation
-import Navigation from "@/components/portfolio/Navigation";
+// Dynamic imports (no SSR for Three.js)
+const WebGLBackground = dynamic(() => import('@/components/three/WebGLBackground'), { ssr: false });
+const LoadingScreen = dynamic(() => import('@/components/portfolio/LoadingScreen'), { ssr: false });
 
 // Sections
-import Hero from "@/components/portfolio/Hero";
-import About from "@/components/portfolio/About";
-import Technologies from "@/components/portfolio/Technologies";
-import Skills from "@/components/portfolio/Skills";
-import Services from "@/components/portfolio/Services";
-import Experience from "@/components/portfolio/Experience";
-import Projects from "@/components/portfolio/Projects";
-import Roadmap from "@/components/portfolio/Roadmap";
-import Achievements from "@/components/portfolio/Achievements";
-import Contact from "@/components/portfolio/Contact";
-import Footer from "@/components/portfolio/Footer";
+import Navigation from '@/components/portfolio/Navigation';
+import Hero from '@/components/portfolio/Hero';
+import About from '@/components/portfolio/About';
+import Skills from '@/components/portfolio/Skills';
+import Projects from '@/components/portfolio/Projects';
+import Experience from '@/components/portfolio/Experience';
+import Contact from '@/components/portfolio/Contact';
+import Footer from '@/components/portfolio/Footer';
 
 // Effects
-import CustomCursor from "@/components/effects/CustomCursor";
-import ScrollProgress from "@/components/effects/ScrollProgress";
-
-// 3D Scene - Dynamic import to avoid SSR
-const Scene = dynamic(() => import("@/components/three/Scene"), {
-  ssr: false,
-});
+import CustomCursor from '@/components/effects/CustomCursor';
+import ScrollProgress from '@/components/effects/ScrollProgress';
+import BackToTop from '@/components/effects/BackToTop';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -38,23 +31,22 @@ export default function Home() {
 
   const handleLoadingComplete = useCallback(() => {
     setIsLoading(false);
-    // Small delay before showing content for smooth transition
     setTimeout(() => setShowContent(true), 100);
   }, []);
 
-  // Enable smooth scrolling with Lenis
+  // Lenis smooth scroll
   useEffect(() => {
     if (!showContent) return;
 
-    let lenis: ReturnType<typeof import("lenis").default> | null = null;
+    let lenis: ReturnType<typeof import('lenis').default> | null = null;
 
-    const initLenis = async () => {
-      const Lenis = (await import("lenis")).default;
+    const init = async () => {
+      const Lenis = (await import('lenis')).default;
       lenis = new Lenis({
-        duration: 1.2,
+        duration: 1.4,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: "vertical" as const,
-        gestureOrientation: "vertical" as const,
+        orientation: 'vertical' as const,
+        gestureOrientation: 'vertical' as const,
         smoothWheel: true,
       });
 
@@ -65,51 +57,44 @@ export default function Home() {
       requestAnimationFrame(raf);
     };
 
-    initLenis();
+    init();
+    return () => { lenis?.destroy(); };
+  }, [showContent]);
 
-    return () => {
-      lenis?.destroy();
-    };
+  // Refresh ScrollTrigger on scroll
+  useEffect(() => {
+    if (!showContent) return;
+    const onScroll = () => ScrollTrigger.refresh();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [showContent]);
 
   return (
     <>
-      {/* Custom Cursor */}
       <CustomCursor />
-
-      {/* Scroll Progress */}
       <ScrollProgress />
+      <WebGLBackground />
 
-      {/* 3D Background */}
-      <Scene />
+      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
 
-      {/* Loading Screen */}
-      <AnimatePresence mode="wait">
-        {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
-      </AnimatePresence>
-
-      {/* Main Content */}
       {showContent && (
-        <div className="relative z-10 min-h-screen flex flex-col">
-          {/* Navigation */}
+        <div className='relative z-10 min-h-screen flex flex-col'>
           <Navigation />
-
-          {/* Main Sections */}
           <main>
             <Hero />
+            <div className='line-separator' />
             <About />
-            <Technologies />
+            <div className='line-separator' />
             <Skills />
-            <Services />
-            <Experience />
+            <div className='line-separator' />
             <Projects />
-            <Roadmap />
-            <Achievements />
+            <div className='line-separator' />
+            <Experience />
+            <div className='line-separator' />
             <Contact />
           </main>
-
-          {/* Footer */}
           <Footer />
+          <BackToTop />
         </div>
       )}
     </>

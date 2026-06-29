@@ -1,175 +1,96 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { User, Calendar, Zap, Code2 } from 'lucide-react';
-import SectionReveal from '@/components/effects/SectionReveal';
+import { useRef, useEffect } from 'react';
+import { MapPin, User, Code2, Sparkles, Target } from 'lucide-react';
+import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+gsap.registerPlugin(ScrollTrigger);
 
-interface InfoCard {
-  label: string;
-  value: string;
-  icon: React.ElementType;
-}
-
-const infoCards: InfoCard[] = [
-  { label: 'Nombre', value: 'Miguel Antonio Chávez Villalba', icon: User },
-  { label: 'Edad', value: '17 años', icon: Calendar },
-  { label: 'Alias', value: 'CAOS', icon: Zap },
-  { label: 'Profesión', value: 'Desarrollador Web Full Stack', icon: Code2 },
+const INFO = [
+  { icon: User, label: 'Nombre', value: 'Miguel Antonio Chávez Villalba' },
+  { icon: Code2, label: 'Alias', value: 'CAOS' },
+  { icon: Target, label: 'Rol', value: 'Full Stack Developer' },
+  { icon: MapPin, label: 'Ubicación', value: 'Paraguay' },
 ];
-
-interface Stat {
-  value: string;
-  label: string;
-}
-
-const stats: Stat[] = [
-  { value: '20+', label: 'Proyectos' },
-  { value: '15+', label: 'Tecnologías' },
-  { value: '3+', label: 'Años de experiencia' },
-];
-
-// ─── Animation Variants ──────────────────────────────────────────────────────
-
-const cardVariants = {
-  hidden: { opacity: 0, x: -20, filter: 'blur(6px)' },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    filter: 'blur(0px)',
-    transition: {
-      duration: 0.6,
-      delay: i * 0.1,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  }),
-};
-
-const statVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      delay: 0.4 + i * 0.1,
-      ease: [0.25, 0.46, 0.45, 0.94],
-    },
-  }),
-};
-
-// ─── Component ───────────────────────────────────────────────────────────────
 
 export default function About() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const labelRef = useGsapFadeIn({ y: 20, blur: 4, duration: 0.8 });
+  const headingRef = useGsapFadeIn({ y: 20, delay: 0.1, duration: 0.8 });
+  const lineRef = useGsapLineReveal();
+  const p1Ref = useGsapFadeIn({ y: 20, delay: 0.15, duration: 0.8 });
+  const p2Ref = useGsapFadeIn({ y: 20, delay: 0.25, duration: 0.8 });
+  const p3Ref = useGsapFadeIn({ y: 20, delay: 0.35, duration: 0.8 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+    gsap.fromTo(
+      cardRef.current,
+      { opacity: 0, x: 30, filter: 'blur(6px)' },
+      {
+        opacity: 1, x: 0, filter: 'blur(0px)',
+        duration: 0.9, delay: 0.3, ease: 'power3.out',
+        scrollTrigger: { trigger: cardRef.current, start: 'top 85%', once: true },
+      }
+    );
+  }, []);
+
   return (
-    <section
-      id="about"
-      className="relative py-24 md:py-32 section-padding"
-    >
-      {/* Background accent */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/3"
-          style={{
-            width: '600px',
-            height: '600px',
-            background:
-              'radial-gradient(circle at center, rgba(0,102,255,0.04) 0%, transparent 60%)',
-            filter: 'blur(80px)',
-          }}
-        />
-      </div>
+    <section id='about' className='py-24 md:py-32 section-padding' ref={sectionRef}>
+      {/* Label */}
+      <p ref={labelRef} className='text-xs tracking-[0.4em] uppercase text-white/25 mb-4'>
+        Sobre Mí
+      </p>
+      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+        From Chaos to Code.
+      </h2>
+      <div ref={lineRef} className='line-separator w-16 mb-10' />
 
-      <div className="relative z-10 max-w-6xl mx-auto">
-        {/* ─── Section Title ──────────────────────────────────────────────── */}
-        <SectionReveal>
-          <div className="flex items-center gap-4 mb-16">
-            <div className="h-px flex-1 max-w-[60px] bg-gradient-to-r from-caos-blue to-transparent" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              Sobre Mí
-            </h2>
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-caos-blue/30 to-transparent" />
-          </div>
-        </SectionReveal>
+      <div className='grid md:grid-cols-5 gap-10 md:gap-16'>
+        {/* Text */}
+        <div className='md:col-span-3 space-y-5'>
+          <p ref={p1Ref} className='text-sm sm:text-base text-white/40 leading-relaxed'>
+            Comencé mi viaje en el mundo de la programación siendo muy joven, autodidacta y con una curiosidad
+            insaciable por entender cómo funcionan las cosas. Lo que empezó como un hobby se convirtió en una
+            pasión que define quién soy hoy.
+          </p>
+          <p ref={p2Ref} className='text-sm sm:text-base text-white/40 leading-relaxed'>
+            Disfruto crear experiencias digitales únicas, interfaces limpias y código elegante. Me especializo
+            en el ecosistema de JavaScript, desde el frontend con React y Next.js hasta el backend con Node.js,
+            siempre buscando el equilibrio perfecto entre diseño y rendimiento.
+          </p>
+          <p ref={p3Ref} className='text-sm sm:text-base text-white/40 leading-relaxed'>
+            Mi objetivo es convertirte en uno de los mejores desarrolladores de la región, explorando
+            constantemente nuevas tecnologías como la inteligencia artificial, los shaders GLSL y las
+            experiencias 3D en la web. Cada proyecto es una oportunidad para aprender algo nuevo.
+          </p>
+        </div>
 
-        {/* ─── Two-Column Layout ──────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Left Column — Info Cards */}
-          <div className="space-y-4">
-            {infoCards.map((card, i) => {
-              const Icon = card.icon;
-              return (
-                <motion.div
-                  key={card.label}
-                  custom={i}
-                  variants={cardVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: '-50px' }}
-                  className="group glass rounded-xl p-5 flex items-center gap-4 transition-all duration-300 hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(0,102,255,0.08)] cursor-default"
-                >
-                  {/* Icon container */}
-                  <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-blue-600/10 flex items-center justify-center transition-all duration-300 group-hover:bg-blue-600/20 group-hover:shadow-[0_0_15px_rgba(0,102,255,0.2)]">
-                    <Icon className="w-5 h-5 text-caos-blue" />
-                  </div>
-
-                  {/* Text */}
-                  <div className="min-w-0">
-                    <p className="text-xs text-muted-foreground uppercase tracking-wider mb-0.5">
-                      {card.label}
-                    </p>
-                    <p className="text-sm md:text-base text-white font-medium truncate">
-                      {card.value}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Right Column — Description & Stats */}
-          <div className="flex flex-col justify-center">
-            <SectionReveal delay={0.2}>
-              <p className="text-base md:text-lg text-muted-foreground leading-relaxed mb-10">
-                Soy un desarrollador web full stack de 17 años, conocido como{' '}
-                <span className="text-white font-semibold">CAOS</span>.
-                Apasionado por crear experiencias digitales extraordinarias que
-                combinan diseño impecable con tecnología de vanguardia. Cada
-                proyecto es una oportunidad para empujar los límites de lo
-                posible en la web.
-              </p>
-            </SectionReveal>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4">
-              {stats.map((stat, i) => (
-                <motion.div
-                  key={stat.label}
-                  custom={i}
-                  variants={statVariants}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true, margin: '-50px' }}
-                  className="glass rounded-xl p-5 text-center transition-all duration-300 hover:border-blue-500/20 hover:shadow-[0_0_25px_rgba(0,102,255,0.06)]"
-                >
-                  <p
-                    className="text-2xl md:text-3xl font-bold text-glow-blue"
-                    style={{
-                      background:
-                        'linear-gradient(135deg, #0066ff, #8b5cf6)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    {stat.value}
-                  </p>
-                  <p className="text-xs md:text-sm text-muted-foreground mt-1">
-                    {stat.label}
-                  </p>
-                </motion.div>
-              ))}
+        {/* Info card */}
+        <div ref={cardRef} className='md:col-span-2'>
+          <div className='glass rounded-2xl p-6 space-y-4'>
+            {INFO.map(({ icon: Icon, label, value }) => (
+              <div key={label} className='flex items-center gap-3.5'>
+                <div className='w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0'>
+                  <Icon className='w-4 h-4 text-[#0a84ff]' />
+                </div>
+                <div>
+                  <p className='text-[11px] uppercase tracking-wider text-white/25'>{label}</p>
+                  <p className='text-sm text-white/70 font-medium'>{value}</p>
+                </div>
+              </div>
+            ))}
+            <div className='pt-2 flex items-center gap-3.5'>
+              <div className='w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0'>
+                <Sparkles className='w-4 h-4 text-[#00d4ff]' />
+              </div>
+              <div>
+                <p className='text-[11px] uppercase tracking-wider text-white/25'>Edad</p>
+                <p className='text-sm text-white/70 font-medium'>17 años</p>
+              </div>
             </div>
           </div>
         </div>
