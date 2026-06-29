@@ -86,7 +86,7 @@ export default function Hero() {
             width: '900px',
             height: '600px',
             background:
-              'radial-gradient(ellipse at center, rgba(0,102,255,0.08) 0%, rgba(139,92,246,0.04) 30%, transparent 70%)',
+              'radial-gradient(ellipse at center, rgba(0,255,136,0.06) 0%, rgba(139,92,246,0.03) 30%, transparent 70%)',
             filter: 'blur(80px)',
           }}
         />
@@ -97,8 +97,8 @@ export default function Hero() {
             width: '600px',
             height: '2px',
             background:
-              'linear-gradient(90deg, transparent, rgba(0,102,255,0.4) 30%, rgba(139,92,246,0.4) 70%, transparent)',
-            boxShadow: '0 0 30px rgba(0,102,255,0.3), 0 0 80px rgba(0,102,255,0.1)',
+              'linear-gradient(90deg, transparent, rgba(0,255,136,0.3) 30%, rgba(139,92,246,0.3) 70%, transparent)',
+            boxShadow: '0 0 30px rgba(0,255,136,0.2), 0 0 80px rgba(0,255,136,0.05)',
           }}
         />
       </div>

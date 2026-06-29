@@ -30,7 +30,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           size: 1.5 + Math.random() * 3.5,
           duration: 0.5 + Math.random() * 0.9,
           delay: Math.random() * 0.2,
-          color: Math.random() > 0.35 ? '#0066ff' : Math.random() > 0.5 ? '#ffffff' : '#4d94ff',
+          color: Math.random() > 0.35 ? '#00ff88' : Math.random() > 0.5 ? '#ffffff' : '#4dffaa',
           opacity: 0.6 + Math.random() * 0.4,
         };
       }),
@@ -90,7 +90,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 width: '600px',
                 height: '300px',
                 background:
-                  'radial-gradient(ellipse at center, rgba(0,102,255,0.12) 0%, rgba(0,102,255,0.04) 40%, transparent 70%)',
+                  'radial-gradient(ellipse at center, rgba(0,255,136,0.12) 0%, rgba(0,255,136,0.04) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
             />
@@ -113,7 +113,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                 width: '120%',
                 height: '200%',
                 background:
-                  'radial-gradient(ellipse at center, rgba(0,102,255,0.25) 0%, transparent 60%)',
+                  'radial-gradient(ellipse at center, rgba(0,255,136,0.25) 0%, transparent 60%)',
                 filter: 'blur(60px)',
               }}
               initial={{ opacity: 0, scale: 0.8 }}
@@ -131,10 +131,10 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
                     style={{
                       fontFamily: 'var(--font-inter), Inter, sans-serif',
                       textShadow: `
-                        0 0 10px rgba(0,102,255,0.9),
-                        0 0 30px rgba(0,102,255,0.6),
-                        0 0 60px rgba(0,102,255,0.35),
-                        0 0 110px rgba(0,102,255,0.15)
+                        0 0 10px rgba(0,255,136,0.9),
+                        0 0 30px rgba(0,255,136,0.6),
+                        0 0 60px rgba(0,255,136,0.35),
+                        0 0 110px rgba(0,255,136,0.15)
                       `,
                       willChange: 'transform, opacity, filter',
                     }}
@@ -238,9 +238,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               className="h-full"
               style={{
                 background:
-                  'linear-gradient(90deg, transparent, #0066ff 20%, #0066ff 80%, transparent)',
+                  'linear-gradient(90deg, transparent, #00ff88 20%, #00ff88 80%, transparent)',
                 boxShadow:
-                  '0 0 8px rgba(0,102,255,0.6), 0 0 20px rgba(0,102,255,0.3), 0 0 40px rgba(0,102,255,0.15)',
+                  '0 0 8px rgba(0,255,136,0.6), 0 0 20px rgba(0,255,136,0.3), 0 0 40px rgba(0,255,136,0.15)',
               }}
               initial={{ width: '0%' }}
               animate={{ width: '100%' }}
