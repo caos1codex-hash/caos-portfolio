@@ -68,6 +68,13 @@ export default function Hero() {
     }
   };
 
+  const scrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* ─── Atmospheric Background ──────────────────────────────────────── */}
@@ -191,6 +198,7 @@ export default function Hero() {
             variants={buttonVariants}
             initial="hidden"
             animate="visible"
+            onClick={scrollToContact}
             className="group px-8 py-3.5 border border-white/10 hover:border-blue-500/50 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-[0_0_20px_rgba(0,102,255,0.15)] cursor-pointer"
           >
             Contactar

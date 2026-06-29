@@ -2,7 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail, Github, MapPin } from 'lucide-react';
+import { Send, Mail, Github, MapPin, Phone, Linkedin, Facebook, Instagram } from 'lucide-react';
 import SectionReveal from '@/components/effects/SectionReveal';
 import { toast } from '@/hooks/use-toast';
 
@@ -30,21 +30,61 @@ const fieldVariants = {
 const contactInfo = [
   {
     icon: Mail,
-    label: 'Email',
-    value: 'contacto@caos.dev',
-    href: 'mailto:contacto@caos.dev',
+    label: 'Gmail',
+    value: 'mchavezvillalba732@gmail.com',
+    href: 'mailto:mchavezvillalba732@gmail.com',
+  },
+  {
+    icon: Phone,
+    label: 'WhatsApp',
+    value: '+595 981 103 689',
+    href: 'https://wa.me/5981103689',
   },
   {
     icon: Github,
     label: 'GitHub',
-    value: 'github.com/caos1codex-hash',
+    value: 'caos1codex-hash',
     href: 'https://github.com/caos1codex-hash',
+  },
+  {
+    icon: Linkedin,
+    label: 'LinkedIn',
+    value: 'Miguel Antonio Chávez Villalba',
+    href: 'https://www.linkedin.com/in/miguel-antonio-chavez-villalba-b08185407/',
   },
   {
     icon: MapPin,
     label: 'Ubicación',
     value: 'Paraguay',
     href: null,
+  },
+];
+
+const socialLinks = [
+  {
+    icon: Github,
+    label: 'GitHub',
+    href: 'https://github.com/caos1codex-hash',
+  },
+  {
+    icon: Linkedin,
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/miguel-antonio-chavez-villalba-b08185407/',
+  },
+  {
+    icon: Instagram,
+    label: 'Instagram',
+    href: 'https://instagram.com/m.chavez.caos',
+  },
+  {
+    icon: Facebook,
+    label: 'Facebook',
+    href: 'https://www.facebook.com/profile.php?id=61590345677739',
+  },
+  {
+    icon: Phone,
+    label: 'WhatsApp',
+    href: 'https://wa.me/5981103689',
   },
 ];
 
@@ -252,16 +292,22 @@ export default function Contact() {
                 <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-4">
                   Social
                 </p>
-                <div className="flex items-center gap-3">
-                  <a
-                    href="https://github.com/caos1codex-hash"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03] text-white/50 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:text-blue-400 hover:bg-white/[0.05] hover:shadow-[0_0_20px_rgba(0,102,255,0.15)]"
-                    aria-label="GitHub"
-                  >
-                    <Github className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
-                  </a>
+                <div className="flex items-center gap-3 flex-wrap">
+                  {socialLinks.map((social) => {
+                    const Icon = social.icon;
+                    return (
+                      <a
+                        key={social.label}
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex h-12 w-12 items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.03] text-white/50 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:text-blue-400 hover:bg-white/[0.05] hover:shadow-[0_0_20px_rgba(0,102,255,0.15)]"
+                        aria-label={social.label}
+                      >
+                        <Icon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Github } from 'lucide-react';
+import { Github, Linkedin, Instagram, Facebook, Phone, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const navLinks = [
@@ -9,6 +9,15 @@ const navLinks = [
   { label: 'Tecnologías', href: '#technologies' },
   { label: 'Proyectos', href: '#projects' },
   { label: 'Contacto', href: '#contact' },
+];
+
+const socialLinks = [
+  { icon: Github, label: 'GitHub', href: 'https://github.com/caos1codex-hash' },
+  { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/miguel-antonio-chavez-villalba-b08185407/' },
+  { icon: Instagram, label: 'Instagram', href: 'https://instagram.com/m.chavez.caos' },
+  { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/profile.php?id=61590345677739' },
+  { icon: Phone, label: 'WhatsApp', href: 'https://wa.me/5981103689' },
+  { icon: Mail, label: 'Email', href: 'mailto:mchavezvillalba732@gmail.com' },
 ];
 
 export default function Footer() {
@@ -80,16 +89,24 @@ export default function Footer() {
               ))}
             </nav>
 
-            {/* Right — GitHub */}
-            <a
-              href="https://github.com/caos1codex-hash"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-white/40 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:text-blue-400 hover:bg-white/[0.06] hover:shadow-[0_0_16px_rgba(0,102,255,0.2)]"
-              aria-label="GitHub"
-            >
-              <Github className="h-[18px] w-[18px] transition-transform duration-300 group-hover:scale-110" />
-            </a>
+            {/* Right — Social Links */}
+            <div className="flex items-center gap-2">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex h-10 w-10 items-center justify-center rounded-lg border border-white/[0.06] bg-white/[0.03] text-white/40 backdrop-blur-md transition-all duration-300 hover:border-blue-500/30 hover:text-blue-400 hover:bg-white/[0.06] hover:shadow-[0_0_16px_rgba(0,102,255,0.2)]"
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-[18px] w-[18px] transition-transform duration-300 group-hover:scale-110" />
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
           {/* Bottom tagline */}
