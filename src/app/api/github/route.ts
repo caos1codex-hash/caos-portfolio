@@ -74,9 +74,18 @@ export async function GET(request: Request) {
       );
       const commitCount = events.filter((e) => e.type === 'PushEvent').length;
 
+      // Fetch all repos to compute totalStars and totalForks
+      const allRepos = await fetchGitHub<GitHubRepo[]>(
+        `/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
+      );
+      const totalStars = allRepos.reduce((sum, r) => sum + r.stargazers_count, 0);
+      const totalForks = allRepos.reduce((sum, r) => sum + r.forks_count, 0);
+
       return NextResponse.json({
         ...user,
         totalCommits: commitCount,
+        totalStars,
+        totalForks,
         yearsCoding: Math.max(1, new Date().getFullYear() - 2022),
       });
     }
