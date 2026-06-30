@@ -7,13 +7,13 @@ export default function Footer() {
 
   return (
     <footer className='mt-auto border-t border-white/[0.04]'>
-      <div className='section-padding py-10 flex flex-col sm:flex-row items-center justify-between gap-4'>
+      <div className='section-padding py-15 flex flex-col sm:flex-row items-center justify-between gap-6'>
         <div className='text-center sm:text-left'>
-          <p className='text-sm font-semibold text-gradient-caos'>CAOS</p>
-          <p className='text-[11px] text-white/15 mt-0.5'>From Chaos to Code.</p>
+          <p className='text-base font-semibold text-gradient-caos'>CAOS</p>
+          <p className='text-xs text-white/15 mt-1'>From Chaos to Code.</p>
         </div>
 
-        <p className='text-[11px] text-white/10'>
+        <p className='text-xs text-white/10'>
           © {year} Miguel Antonio Chávez Villalba. Todos los derechos reservados.
         </p>
 
@@ -21,10 +21,10 @@ export default function Footer() {
           href='https://github.com/caos1codex-hash'
           target='_blank'
           rel='noopener noreferrer'
-          className='liquid-glass-btn w-9 h-9 rounded-lg flex items-center justify-center text-white/20 hover:text-white/50 transition-colors'
+          className='liquid-glass-btn w-14 h-14 rounded-xl flex items-center justify-center text-white/20 hover:text-white/50 transition-colors'
           data-cursor-hover
         >
-          <Github className='w-4 h-4' />
+          <Github className='w-5 h-5' />
         </a>
       </div>
     </footer>
