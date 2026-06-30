@@ -57,21 +57,21 @@ export default function Navigation() {
             : 'bg-transparent'
         }`}
       >
-        <div className='max-w-7xl mx-auto px-6 h-16 flex items-center justify-between'>
+        <div className='max-w-7xl mx-auto px-9 h-24 flex items-center justify-between'>
           <button
             onClick={() => handleClick('#hero')}
-            className='text-lg font-bold tracking-wider text-gradient-caos hover:opacity-80 transition-opacity'
+            className='text-2xl font-bold tracking-wider text-gradient-caos hover:opacity-80 transition-opacity'
             data-cursor-hover
           >
             CAOS
           </button>
 
-          <div className='hidden md:flex items-center gap-1'>
+          <div className='hidden md:flex items-center gap-1.5'>
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.href}
                 onClick={() => handleClick(item.href)}
-                className={`px-3.5 py-1.5 text-sm font-medium rounded-lg transition-all duration-300 ${
+                className={`px-5 py-2.5 text-base font-medium rounded-xl transition-all duration-300 ${
                   active === item.href.slice(1)
                     ? 'liquid-glass-btn text-white'
                     : 'text-white/40 hover:text-white/80 hover:bg-white/[0.03]'
@@ -84,10 +84,10 @@ export default function Navigation() {
           </div>
 
           <button
-            className='md:hidden p-2 text-white/50 hover:text-white rounded-lg hover:bg-white/[0.04] transition-all'
+            className='md:hidden p-3 text-white/50 hover:text-white rounded-xl hover:bg-white/[0.04] transition-all'
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X size={33} /> : <Menu size={33} />}
           </button>
         </div>
       </nav>
@@ -99,13 +99,13 @@ export default function Navigation() {
           backdropFilter: 'blur(60px)',
           WebkitBackdropFilter: 'blur(60px)',
         }}>
-          <div className='flex flex-col gap-1 pt-24 px-6'>
+          <div className='flex flex-col gap-1.5 pt-36 px-9'>
             {NAV_ITEMS.map((item, i) => (
               <button
                 key={item.href}
                 ref={(el) => { if (el) mobileItemsRef.current[i] = el; }}
                 onClick={() => handleClick(item.href)}
-                className={`text-left py-3.5 px-5 text-lg font-medium rounded-xl transition-all duration-300 ${
+                className={`text-left py-5 px-8 text-2xl font-medium rounded-2xl transition-all duration-300 ${
                   active === item.href.slice(1)
                     ? 'liquid-glass-btn text-white'
                     : 'text-white/40 hover:text-white/80 hover:bg-white/[0.03]'
