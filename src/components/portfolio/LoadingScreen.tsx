@@ -66,17 +66,17 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       }}
     >
       {/* Ambient glow behind letters */}
-      <div className='absolute w-64 h-64 rounded-full blur-[100px] opacity-20'
+      <div className='absolute w-96 h-96 rounded-full blur-[100px] opacity-20'
         style={{ background: 'radial-gradient(circle, #1e90ff 0%, transparent 70%)' }}
       />
 
       {/* Letters */}
-      <div className='flex items-center tracking-[0.3em] relative z-10'>
+      <div className='flex items-center tracking-[0.45em] relative z-10'>
         {letters.map((letter, i) => (
           <span
             key={i}
             ref={(el) => { if (el) lettersRef.current[i] = el; }}
-            className='text-7xl sm:text-8xl md:text-9xl font-bold text-white'
+            className='text-8xl sm:text-[9rem] md:text-[11rem] font-bold text-white'
             style={{
               fontFamily: 'var(--font-inter), Inter, sans-serif',
               textShadow: '0 0 40px rgba(30, 144, 255, 0.3)',
@@ -90,14 +90,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {/* Subtitle */}
       <p
         ref={subtitleRef}
-        className='mt-6 text-xs sm:text-sm tracking-[0.5em] uppercase text-white/30 relative z-10'
+        className='mt-9 text-sm sm:text-base tracking-[0.75em] uppercase text-white/30 relative z-10'
         style={{ fontFamily: 'var(--font-inter), Inter, sans-serif' }}
       >
         From Chaos to Code.
       </p>
 
       {/* Progress bar - spatial blue */}
-      <div ref={barRef} className='absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.03]'>
+      <div ref={barRef} className='absolute bottom-0 left-0 right-0 h-[3px] bg-white/[0.03]'>
         <div
           ref={barFillRef}
           className='h-full'
