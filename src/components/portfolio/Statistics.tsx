@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useGsapFadeIn, useGsapLineReveal, useGsapCounter } from '@/hooks/useGsap';
-import { GitFork, Star, GitCommit, Calendar, Code2 } from 'lucide-react';
+import { GitFork, Star, GitCommit, Calendar, Code2, Eye } from 'lucide-react';
 
 type StatItem = {
   icon: React.ElementType;
@@ -28,7 +28,7 @@ export default function Statistics() {
           { icon: Star, label: 'Stars', value: data.totalStars || 0 },
           { icon: GitFork, label: 'Forks', value: data.totalForks || 0 },
           { icon: Calendar, label: 'Años Programando', value: data.yearsCoding || 3 },
-          { icon: Star, label: 'Seguidores', value: data.followers || 0 },
+          { icon: Eye, label: 'Seguidores', value: data.followers || 0 },
         ]);
       })
       .catch(() => {
