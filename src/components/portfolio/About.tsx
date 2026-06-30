@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useEffect } from 'react';
-import { MapPin, User, Code2, Sparkles, Target } from 'lucide-react';
+import { MapPin, User, Code2, Sparkles, Target, Zap } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,6 +13,8 @@ const INFO = [
   { icon: Code2, label: 'Alias', value: 'CAOS' },
   { icon: Target, label: 'Rol', value: 'Full Stack Developer' },
   { icon: MapPin, label: 'Ubicación', value: 'Paraguay' },
+  { icon: Sparkles, label: 'Edad', value: '17 años' },
+  { icon: Zap, label: 'Focus', value: 'Creative Engineering' },
 ];
 
 export default function About() {
@@ -28,11 +30,11 @@ export default function About() {
   useEffect(() => {
     if (!cardRef.current) return;
     gsap.fromTo(
-      cardRef.current,
+      cardRef.current.children,
       { opacity: 0, x: 30, filter: 'blur(6px)' },
       {
         opacity: 1, x: 0, filter: 'blur(0px)',
-        duration: 0.9, delay: 0.3, ease: 'power3.out',
+        duration: 0.7, stagger: 0.08, delay: 0.2, ease: 'power3.out',
         scrollTrigger: { trigger: cardRef.current, start: 'top 85%', once: true },
       }
     );
@@ -63,36 +65,29 @@ export default function About() {
             siempre buscando el equilibrio perfecto entre diseño y rendimiento.
           </p>
           <p ref={p3Ref} className='text-sm sm:text-base text-white/40 leading-relaxed'>
-            Mi objetivo es convertirte en uno de los mejores desarrolladores de la región, explorando
+            Mi objetivo es convertirme en uno de los mejores desarrolladores de la región, explorando
             constantemente nuevas tecnologías como la inteligencia artificial, los shaders GLSL y las
             experiencias 3D en la web. Cada proyecto es una oportunidad para aprender algo nuevo.
           </p>
         </div>
 
-        {/* Info card */}
-        <div ref={cardRef} className='md:col-span-2'>
-          <div className='glass rounded-2xl p-6 space-y-4'>
-            {INFO.map(({ icon: Icon, label, value }) => (
-              <div key={label} className='flex items-center gap-3.5'>
-                <div className='w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0'>
-                  <Icon className='w-4 h-4 text-[#0a84ff]' />
-                </div>
-                <div>
-                  <p className='text-[11px] uppercase tracking-wider text-white/25'>{label}</p>
-                  <p className='text-sm text-white/70 font-medium'>{value}</p>
-                </div>
+        {/* Info cards */}
+        <div ref={cardRef} className='md:col-span-2 grid grid-cols-1 gap-3'>
+          {INFO.map(({ icon: Icon, label, value }) => (
+            <div
+              key={label}
+              className='glass rounded-xl p-4 flex items-center gap-3.5 group hover:border-[#0a84ff]/15 transition-all duration-500'
+              data-cursor-hover
+            >
+              <div className='w-10 h-10 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0 group-hover:bg-[#0a84ff]/10 transition-colors'>
+                <Icon className='w-4 h-4 text-[#0a84ff]' />
               </div>
-            ))}
-            <div className='pt-2 flex items-center gap-3.5'>
-              <div className='w-9 h-9 rounded-lg bg-white/[0.04] flex items-center justify-center flex-shrink-0'>
-                <Sparkles className='w-4 h-4 text-[#00d4ff]' />
-              </div>
-              <div>
-                <p className='text-[11px] uppercase tracking-wider text-white/25'>Edad</p>
-                <p className='text-sm text-white/70 font-medium'>17 años</p>
+              <div className='min-w-0'>
+                <p className='text-[10px] uppercase tracking-wider text-white/25'>{label}</p>
+                <p className='text-sm text-white/70 font-medium truncate'>{value}</p>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
