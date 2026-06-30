@@ -76,13 +76,13 @@ export default function Hero() {
       ref={containerRef}
       className='relative min-h-screen flex flex-col items-center justify-center overflow-hidden w-full'
     >
-      <div className='relative z-10 flex flex-col items-center text-center px-9 max-w-7xl mx-auto'>
+      <div className='relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto'>
         {/* Label - liquid glass pill */}
         <div
           data-hero='label'
-          className='liquid-glass-text px-8 py-3 rounded-full mb-12'
+          className='liquid-glass-text px-5 py-2 rounded-full mb-8'
         >
-          <span className='text-sm sm:text-base tracking-[0.6em] uppercase text-white/40'>
+          <span className='text-xs sm:text-sm tracking-[0.4em] uppercase text-white/40'>
             Hello, I&apos;m
           </span>
         </div>
@@ -90,13 +90,13 @@ export default function Hero() {
         {/* Name */}
         <h1
           data-hero='name1'
-          className='text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-gradient-caos leading-tight'
+          className='text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-gradient-caos leading-tight'
         >
           Miguel Antonio
         </h1>
         <h1
           data-hero='name2'
-          className='text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-tight'
+          className='text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight'
         >
           Chávez Villalba
         </h1>
@@ -104,11 +104,11 @@ export default function Hero() {
         {/* CAOS - liquid glass container */}
         <div
           data-hero='caos'
-          className='relative mt-3 md:mt-6'
+          className='relative mt-2 md:mt-4'
         >
-          <div className='absolute -inset-12 bg-[#1e90ff]/[0.03] rounded-full blur-3xl' />
+          <div className='absolute -inset-8 bg-[#1e90ff]/[0.03] rounded-full blur-3xl' />
           <h2
-            className='text-8xl sm:text-[8.5rem] md:text-[11rem] lg:text-[16rem] font-black tracking-widest animate-shimmer relative'
+            className='text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] font-black tracking-wider animate-shimmer relative'
             style={{
               background: 'linear-gradient(90deg, #ffffff 0%, #1e90ff 25%, #00d4ff 50%, #1e90ff 75%, #ffffff 100%)',
               backgroundSize: '200% 100%',
@@ -124,9 +124,9 @@ export default function Hero() {
         {/* Subtitle - liquid glass container */}
         <div
           data-hero='subtitle'
-          className='liquid-glass-text px-9 py-3 rounded-full mt-9 md:mt-12'
+          className='liquid-glass-text px-6 py-2 rounded-full mt-6 md:mt-8'
         >
-          <p className='text-base sm:text-lg md:text-xl text-white/50 tracking-wide'>
+          <p className='text-sm sm:text-base md:text-lg text-white/50 tracking-wide'>
             Full Stack Developer &bull; Creative Programmer &bull; 17 Years Old
           </p>
         </div>
@@ -134,25 +134,25 @@ export default function Hero() {
         {/* Description */}
         <p
           data-hero='desc'
-          className='text-base sm:text-lg text-white/30 mt-6 max-w-3xl leading-loose'
+          className='text-sm sm:text-base text-white/30 mt-4 max-w-xl leading-relaxed'
         >
           From Chaos to Code. Transformo ideas en experiencias digitales extraordinarias.
           Especializado en crear aplicaciones web modernas, rápidas y elegantes.
         </p>
 
         {/* Buttons - liquid glass */}
-        <div data-hero='buttons' className='flex flex-col sm:flex-row items-center gap-6 mt-15 md:mt-18'>
+        <div data-hero='buttons' className='flex flex-col sm:flex-row items-center gap-4 mt-10 md:mt-12'>
           <button
             ref={btn1Ref}
             onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
             onMouseMove={(e) => handleMouseMove(e, btn1Ref)}
             onMouseLeave={() => handleMouseLeave(btn1Ref)}
-            className='magnetic-btn liquid-glass-btn flex items-center gap-4 px-10 py-5 text-white text-base font-medium rounded-2xl'
+            className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white text-sm font-medium rounded-xl'
             data-cursor-hover
           >
-            <span className='relative z-10 flex items-center gap-4'>
+            <span className='relative z-10 flex items-center gap-2.5'>
               Ver Proyectos
-              <ArrowRight className='w-5 h-5 transition-transform group-hover:translate-x-0.5' />
+              <ArrowRight className='w-4 h-4 transition-transform group-hover:translate-x-0.5' />
             </span>
           </button>
           <button
@@ -160,12 +160,12 @@ export default function Hero() {
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             onMouseMove={(e) => handleMouseMove(e, btn2Ref)}
             onMouseLeave={() => handleMouseLeave(btn2Ref)}
-            className='magnetic-btn liquid-glass-btn flex items-center gap-4 px-10 py-5 text-white/70 hover:text-white text-base font-medium rounded-2xl'
+            className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white/70 hover:text-white text-sm font-medium rounded-xl'
             data-cursor-hover
           >
-            <span className='relative z-10 flex items-center gap-4'>
+            <span className='relative z-10 flex items-center gap-2.5'>
               Contactar
-              <Send className='w-5 h-5 transition-transform group-hover:translate-x-0.5' />
+              <Send className='w-4 h-4 transition-transform group-hover:translate-x-0.5' />
             </span>
           </button>
         </div>
@@ -174,11 +174,11 @@ export default function Hero() {
       {/* Scroll indicator */}
       <div
         data-hero='scroll'
-        className='absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3'
+        className='absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2'
       >
-        <span className='text-xs tracking-[0.45em] uppercase text-white/15'>Scroll</span>
+        <span className='text-[10px] tracking-[0.3em] uppercase text-white/15'>Scroll</span>
         <div className='animate-bounce'>
-          <ChevronDown className='w-5 h-5 text-white/15' />
+          <ChevronDown className='w-4 h-4 text-white/15' />
         </div>
       </div>
     </section>
