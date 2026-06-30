@@ -56,18 +56,19 @@ interface PrebuiltData extends UserStats {
   repos: EnrichedRepo[];
 }
 
-let prebuiltCache: PrebuiltData | null | undefined = undefined;
+let prebuiltPromise: Promise<PrebuiltData | null> | null = null;
 
 async function getPrebuiltData(): Promise<PrebuiltData | null> {
-  if (prebuiltCache !== undefined) return prebuiltCache;
-  prebuiltCache = null;
-  try {
-    const res = await fetch('./github-data.json');
-    if (res.ok) {
-      prebuiltCache = await res.json();
-    }
-  } catch { /* not available */ }
-  return prebuiltCache;
+  if (!prebuiltPromise) {
+    prebuiltPromise = (async () => {
+      try {
+        const res = await fetch('./github-data.json');
+        if (res.ok) return await res.json() as PrebuiltData;
+      } catch { /* not available */ }
+      return null;
+    })();
+  }
+  return prebuiltPromise;
 }
 
 // --- Live API fallback ---
