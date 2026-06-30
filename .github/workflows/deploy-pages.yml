@@ -29,11 +29,13 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Remove API routes for static export
+        run: rm -rf src/app/api
+
       - name: Build static site
         run: bun run build:static
         env:
           NEXT_STATIC_EXPORT: "true"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
