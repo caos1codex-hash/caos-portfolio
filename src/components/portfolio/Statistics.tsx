@@ -44,7 +44,7 @@ export default function Statistics() {
   }, []);
 
   return (
-    <section className='py-24 md:py-32 section-padding'>
+    <section id='statistics' className='py-24 md:py-32 section-padding'>
       <p ref={labelRef} className='text-xs tracking-[0.4em] uppercase text-white/25 mb-4'>
         Estadísticas
       </p>
@@ -66,8 +66,8 @@ function StatCard({ icon: Icon, label, value, suffix = '' }: StatItem) {
   const countRef = useGsapCounter(value, { duration: 2 });
 
   return (
-    <div className='glass rounded-xl p-5 text-center group hover:border-[#0a84ff]/15 transition-all duration-500'>
-      <Icon className='w-5 h-5 text-[#0a84ff] mx-auto mb-3' />
+    <div className='glass rounded-xl p-5 text-center group hover:border-[#0a84ff]/15 transition-all duration-500 card-lift'>
+      <Icon className='w-5 h-5 text-[#0a84ff] mx-auto mb-3 group-hover:scale-110 transition-transform duration-300' />
       <span ref={countRef} className='text-2xl md:text-3xl font-bold text-white block'>
         0
       </span>
