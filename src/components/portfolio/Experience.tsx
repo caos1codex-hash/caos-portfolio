@@ -36,43 +36,43 @@ export default function Experience() {
   const cardsRef = useGsapStagger({ stagger: 0.1, y: 25, duration: 0.7 });
 
   return (
-    <section className='py-24 md:py-32 section-padding w-full'>
+    <section className='py-36 md:py-48 section-padding w-full'>
       {/* Label */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Experiencia</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Experiencia</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         Proyectos Destacados
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-10' />
+      <div ref={lineRef} className='line-separator w-24 mb-15' />
 
-      <div ref={cardsRef} className='max-w-3xl space-y-5'>
+      <div ref={cardsRef} className='max-w-5xl space-y-8'>
         {EXPERIENCES.map((exp, i) => (
-          <div key={i} className='liquid-glass rounded-xl p-6 group liquid-glass-lift'>
-            <div className='flex items-start justify-between mb-2 relative z-10'>
+          <div key={i} className='liquid-glass rounded-2xl p-9 group liquid-glass-lift'>
+            <div className='flex items-start justify-between mb-3 relative z-10'>
               <div>
-                <h3 className='text-base font-semibold text-white/90'>{exp.title}</h3>
-                <p className='text-xs text-[#1e90ff] mt-0.5'>{exp.role}</p>
+                <h3 className='text-xl font-semibold text-white/90'>{exp.title}</h3>
+                <p className='text-sm text-[#1e90ff] mt-1'>{exp.role}</p>
               </div>
-              <div className='flex items-center gap-2'>
+              <div className='flex items-center gap-3'>
                 {exp.github && (
                   <a href={exp.github} target='_blank' rel='noopener noreferrer'
                     className='text-white/20 hover:text-white transition-colors' data-cursor-hover>
-                    <Github className='w-4 h-4' />
+                    <Github className='w-6 h-6' />
                   </a>
                 )}
                 {exp.demo && (
                   <a href={exp.demo} target='_blank' rel='noopener noreferrer'
                     className='text-white/20 hover:text-[#1e90ff] transition-colors' data-cursor-hover>
-                    <ExternalLink className='w-4 h-4' />
+                    <ExternalLink className='w-6 h-6' />
                   </a>
                 )}
               </div>
             </div>
-            <p className='text-xs text-white/30 leading-relaxed mb-3 relative z-10'>{exp.description}</p>
-            <div className='flex flex-wrap gap-1.5 relative z-10'>
+            <p className='text-sm text-white/30 leading-relaxed mb-5 relative z-10'>{exp.description}</p>
+            <div className='flex flex-wrap gap-2.5 relative z-10'>
               {exp.tech.map(t => (
-                <span key={t} className='px-2.5 py-0.5 text-[10px] rounded-full liquid-glass-btn text-white/30'>
+                <span key={t} className='px-4 py-1 text-xs rounded-full liquid-glass-btn text-white/30'>
                   {t}
                 </span>
               ))}
