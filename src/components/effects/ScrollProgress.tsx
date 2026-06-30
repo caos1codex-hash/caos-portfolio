@@ -30,9 +30,9 @@ export default function ScrollProgress() {
         ref={barRef}
         className='h-full origin-left'
         style={{
-          background: 'linear-gradient(90deg, #0a84ff, #00d4ff, #8b5cf6)',
+          background: 'linear-gradient(90deg, #1e90ff, #00d4ff, #7c6aef)',
           transform: 'scaleX(0)',
-          boxShadow: '0 0 8px rgba(10,132,255,0.4), 0 0 20px rgba(0,212,255,0.15)',
+          boxShadow: '0 0 8px rgba(30, 144, 255, 0.3)',
         }}
       />
     </div>
