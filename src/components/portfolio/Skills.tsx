@@ -1,14 +1,17 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
+import { useState } from 'react';
+import { useGsapFadeIn, useGsapLineReveal, useGsapStagger } from '@/hooks/useGsap';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
   Globe, Server, Database, Wrench, Brain, Gamepad2,
-  Html, FileCode, Cpu, Terminal, Palette, Layers,
+  FileCode, Cpu, Terminal, Palette, Layers,
   Cog, Box, Container, GitBranch, Figma,
   MonitorSmartphone, Workflow, Bot, Network, Sparkles, Joystick, type LucideIcon
 } from 'lucide-react';
+
+gsap.registerPlugin(ScrollTrigger);
 
 type Category = 'all' | 'frontend' | 'backend' | 'databases' | 'tools' | 'ai' | 'gamedev';
 
@@ -30,7 +33,7 @@ const CATEGORIES: SkillCategory[] = [
       { name: 'JavaScript', icon: FileCode },
       { name: 'TypeScript', icon: Cpu },
       { name: 'React', icon: Layers },
-      { name: 'Next.js', icon: MonitorSmartphone },
+      { name: 'Next.js', icon: Box },
       { name: 'Tailwind CSS', icon: Terminal },
       { name: 'GSAP', icon: Sparkles },
       { name: 'Three.js', icon: Box },
@@ -82,7 +85,7 @@ const CATEGORIES: SkillCategory[] = [
       { name: 'LangChain', icon: Network },
       { name: 'Machine Learning', icon: Brain },
       { name: 'NLP', icon: Cpu },
-      { name: 'Prompt Eng.', icon: Sparkles },
+      { name: 'Prompt Engineering', icon: Sparkles },
     ],
   },
   {
@@ -105,7 +108,7 @@ const TABS: { id: Category; label: string }[] = [
 
 export default function Skills() {
   const [active, setActive] = useState<Category>('all');
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridRef = useGsapStagger({ stagger: 0.04, y: 20, duration: 0.6 });
   const labelRef = useGsapFadeIn({ y: 20, blur: 4 });
   const headingRef = useGsapFadeIn({ y: 20, delay: 0.1 });
   const lineRef = useGsapLineReveal();
@@ -113,33 +116,18 @@ export default function Skills() {
 
   const visible = active === 'all' ? CATEGORIES : CATEGORIES.filter(c => c.id === active);
 
-  // Animate grid on tab change
-  useEffect(() => {
-    if (!gridRef.current) return;
-    const children = gridRef.current.children;
-    if (!children.length) return;
-
-    gsap.fromTo(
-      children,
-      { opacity: 0, y: 20, filter: 'blur(4px)', scale: 0.98 },
-      {
-        opacity: 1, y: 0, filter: 'blur(0px)', scale: 1,
-        duration: 0.5, stagger: 0.04, ease: 'power3.out',
-      }
-    );
-  }, [active]);
-
   return (
-    <section id='skills' className='py-24 md:py-32 section-padding'>
-      <p ref={labelRef} className='text-xs tracking-[0.4em] uppercase text-white/25 mb-4'>
-        Habilidades
-      </p>
+    <section id='skills' className='py-24 md:py-32 section-padding w-full'>
+      {/* Label */}
+      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
+        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Habilidades</p>
+      </div>
       <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
         Technologies & Tools
       </h2>
       <div ref={lineRef} className='line-separator w-16 mb-8' />
 
-      {/* Tabs */}
+      {/* Tabs - liquid glass */}
       <div ref={tabsRef} className='flex flex-wrap gap-2 mb-10'>
         {TABS.map(tab => (
           <button
@@ -147,8 +135,8 @@ export default function Skills() {
             onClick={() => setActive(tab.id)}
             className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 ${
               active === tab.id
-                ? 'bg-[#0a84ff] text-white shadow-lg shadow-[#0a84ff]/20'
-                : 'bg-white/[0.04] text-white/40 hover:text-white/70 hover:bg-white/[0.06]'
+                ? 'liquid-glass-btn text-white border-[#1e90ff]/20'
+                : 'liquid-glass-btn text-white/40'
             }`}
             data-cursor-hover
           >
@@ -157,24 +145,20 @@ export default function Skills() {
         ))}
       </div>
 
-      {/* Skills grid */}
+      {/* Skills grid - liquid glass cards */}
       <div ref={gridRef} className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
         {visible.map(cat => (
-          <div
-            key={cat.id}
-            className='glass rounded-xl p-5 group hover:border-[#0a84ff]/15 transition-all duration-500 card-lift'
-            data-cursor-hover
-          >
-            <h3 className='text-xs font-semibold uppercase tracking-wider text-[#0a84ff] mb-4'>{cat.label}</h3>
-            <div className='grid grid-cols-3 gap-2.5'>
+          <div key={cat.id} className='liquid-glass rounded-xl p-5 group liquid-glass-lift'>
+            <h3 className='text-xs font-semibold uppercase tracking-wider text-[#1e90ff] mb-4 relative z-10'>{cat.label}</h3>
+            <div className='grid grid-cols-3 gap-2.5 relative z-10'>
               {cat.skills.map(skill => (
                 <div
                   key={skill.name}
-                  className='flex flex-col items-center gap-1.5 py-2 px-1 rounded-lg hover:bg-white/[0.03] transition-colors'
+                  className='flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-lg hover:bg-white/[0.04] transition-colors liquid-glass-btn'
                   data-cursor-hover
                 >
-                  <skill.icon className='w-4 h-4 text-white/30 group-hover:text-[#0a84ff] transition-colors duration-300' />
-                  <span className='text-[10px] text-white/30 group-hover:text-white/60 text-center leading-tight transition-colors duration-300'>
+                  <skill.icon className='w-4 h-4 text-white/30 group-hover:text-[#1e90ff] transition-colors' />
+                  <span className='text-[10px] text-white/30 group-hover:text-white/60 text-center leading-tight transition-colors'>
                     {skill.name}
                   </span>
                 </div>
