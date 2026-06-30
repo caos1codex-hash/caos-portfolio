@@ -3,6 +3,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from 'gsap';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,8 @@ import Hero from '@/components/portfolio/Hero';
 import About from '@/components/portfolio/About';
 import Skills from '@/components/portfolio/Skills';
 import Projects from '@/components/portfolio/Projects';
+import Statistics from '@/components/portfolio/Statistics';
+import Timeline from '@/components/portfolio/Timeline';
 import Experience from '@/components/portfolio/Experience';
 import Contact from '@/components/portfolio/Contact';
 import Footer from '@/components/portfolio/Footer';
@@ -88,6 +91,10 @@ export default function Home() {
             <Skills />
             <div className='line-separator' />
             <Projects />
+            <div className='line-separator' />
+            <Statistics />
+            <div className='line-separator' />
+            <Timeline />
             <div className='line-separator' />
             <Experience />
             <div className='line-separator' />
