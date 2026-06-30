@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useGsapFadeIn, useGsapLineReveal, useGsapCounter } from '@/hooks/useGsap';
 import { GitFork, Star, GitCommit, Calendar, Code2, Eye } from 'lucide-react';
 
+const GITHUB_USERNAME = 'caos1codex-hash';
+
 type StatItem = {
   icon: React.ElementType;
   label: string;
@@ -19,19 +21,48 @@ export default function Statistics() {
   const containerRef = useGsapFadeIn({ y: 20, delay: 0.2, duration: 0.8 });
 
   useEffect(() => {
-    fetch('/api/github?type=user')
-      .then(r => r.json())
-      .then(data => {
-        setStats([
-          { icon: Code2, label: 'Repositorios', value: data.public_repos || 0 },
-          { icon: GitCommit, label: 'Commits', value: data.totalCommits || 0 },
-          { icon: Star, label: 'Stars', value: data.totalStars || 0 },
-          { icon: GitFork, label: 'Forks', value: data.totalForks || 0 },
-          { icon: Calendar, label: 'Años Programando', value: data.yearsCoding || 3 },
-          { icon: Eye, label: 'Seguidores', value: data.followers || 0 },
+    const fetchStats = async () => {
+      try {
+        // Try server API first
+        const res = await fetch('/api/github?type=user');
+        if (res.ok) {
+          const data = await res.json();
+          setStats([
+            { icon: Code2, label: 'Repositorios', value: data.public_repos || 0 },
+            { icon: GitCommit, label: 'Commits', value: data.totalCommits || 0 },
+            { icon: Star, label: 'Stars', value: data.totalStars || 0 },
+            { icon: GitFork, label: 'Forks', value: data.totalForks || 0 },
+            { icon: Calendar, label: 'Años Programando', value: data.yearsCoding || 3 },
+            { icon: Eye, label: 'Seguidores', value: data.followers || 0 },
+          ]);
+          return;
+        }
+      } catch { /* fallback */ }
+
+      // Direct GitHub API fallback
+      try {
+        const [userRes, reposRes, eventsRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
+          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`),
+          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=100`),
         ]);
-      })
-      .catch(() => {
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+        const events = await eventsRes.json();
+
+        const totalStars = repos.reduce((sum: number, r: any) => sum + r.stargazers_count, 0);
+        const totalForks = repos.reduce((sum: number, r: any) => sum + r.forks_count, 0);
+        const commitCount = events.filter((e: any) => e.type === 'PushEvent').length;
+
+        setStats([
+          { icon: Code2, label: 'Repositorios', value: user.public_repos || 0 },
+          { icon: GitCommit, label: 'Commits', value: commitCount },
+          { icon: Star, label: 'Stars', value: totalStars },
+          { icon: GitFork, label: 'Forks', value: totalForks },
+          { icon: Calendar, label: 'Años Programando', value: Math.max(1, new Date().getFullYear() - 2022) },
+          { icon: Eye, label: 'Seguidores', value: user.followers || 0 },
+        ]);
+      } catch {
         setStats([
           { icon: Code2, label: 'Repositorios', value: 15 },
           { icon: GitCommit, label: 'Commits', value: 200 },
@@ -40,7 +71,9 @@ export default function Statistics() {
           { icon: Calendar, label: 'Años Programando', value: 3 },
           { icon: Eye, label: 'Seguidores', value: 0 },
         ]);
-      });
+      }
+    };
+    fetchStats();
   }, []);
 
   return (
