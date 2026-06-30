@@ -44,17 +44,17 @@ export default function Statistics() {
   }, []);
 
   return (
-    <section id='statistics' className='py-24 md:py-32 section-padding w-full'>
+    <section id='statistics' className='py-36 md:py-48 section-padding w-full'>
       {/* Label */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Estadísticas</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Estadísticas</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         En Números
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-10' />
+      <div ref={lineRef} className='line-separator w-24 mb-15' />
 
-      <div ref={containerRef} className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4'>
+      <div ref={containerRef} className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6'>
         {stats.map(stat => (
           <StatCard key={stat.label} {...stat} />
         ))}
@@ -67,13 +67,13 @@ function StatCard({ icon: Icon, label, value, suffix = '' }: StatItem) {
   const countRef = useGsapCounter(value, { duration: 2 });
 
   return (
-    <div className='liquid-glass rounded-xl p-5 text-center group liquid-glass-lift'>
+    <div className='liquid-glass rounded-2xl p-8 text-center group liquid-glass-lift'>
       <div className='relative z-10'>
-        <Icon className='w-5 h-5 text-[#1e90ff] mx-auto mb-3' />
-        <span ref={countRef} className='text-2xl md:text-3xl font-bold text-white block'>
+        <Icon className='w-8 h-8 text-[#1e90ff] mx-auto mb-5' />
+        <span ref={countRef} className='text-4xl md:text-5xl font-bold text-white block'>
           0
         </span>
-        <span className='text-[10px] uppercase tracking-wider text-white/30 mt-1 block'>
+        <span className='text-xs uppercase tracking-wider text-white/30 mt-1.5 block'>
           {label}{suffix ? ` ${suffix}` : ''}
         </span>
       </div>
