@@ -29,11 +29,11 @@ export default function BackToTop() {
     <button
       ref={btnRef}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className='fixed bottom-6 right-6 z-50 w-10 h-10 rounded-xl liquid-glass-btn flex items-center justify-center opacity-0 translate-y-5'
+      className='fixed bottom-9 right-9 z-50 w-15 h-15 rounded-2xl liquid-glass-btn flex items-center justify-center opacity-0 translate-y-5'
       aria-label='Volver arriba'
       data-cursor-hover
     >
-      <ArrowUp className='w-4 h-4 text-white/40' />
+      <ArrowUp className='w-6 h-6 text-white/40' />
     </button>
   );
 }
