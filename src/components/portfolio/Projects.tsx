@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { ExternalLink, Github, Search } from 'lucide-react';
+import { ExternalLink, Github, Search, Eye } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
 import type { EnrichedRepo } from '@/app/api/github/route';
 
@@ -211,6 +211,18 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
         </div>
         <span>{timeAgo()}</span>
       </div>
+
+      {/* Ver en vivo button */}
+      <a
+        href={repo.hasDemo ? repo.demoUrl : repo.pagesUrl}
+        target='_blank'
+        rel='noopener noreferrer'
+        className='mt-5 flex items-center justify-center gap-2 w-full liquid-glass-btn py-2.5 rounded-xl text-sm text-white/50 hover:text-[#1e90ff] transition-colors relative z-10'
+        data-cursor-hover
+      >
+        <Eye className='w-4 h-4' />
+        Ver en vivo
+      </a>
     </div>
   );
 }
