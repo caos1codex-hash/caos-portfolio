@@ -25,29 +25,29 @@ export default function Timeline() {
   const itemsRef = useGsapStagger({ stagger: 0.1, y: 25, duration: 0.7 });
 
   return (
-    <section className='py-24 md:py-32 section-padding w-full'>
+    <section className='py-36 md:py-48 section-padding w-full'>
       {/* Label */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Evolución</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Evolución</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         Mi Camino
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-12' />
+      <div ref={lineRef} className='line-separator w-24 mb-18' />
 
-      <div ref={itemsRef} className='relative max-w-2xl mx-auto'>
+      <div ref={itemsRef} className='relative max-w-3xl mx-auto'>
         {/* Vertical line - subtle spatial blue */}
-        <div className='absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#1e90ff]/15 to-transparent md:-translate-x-px' />
+        <div className='absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#1e90ff]/15 to-transparent md:-translate-x-px' />
 
         {EVENTS.map((item, i) => (
           <div
             key={i}
-            className={`relative flex items-start gap-6 mb-10 last:mb-0 ${
+            className={`relative flex items-start gap-9 mb-15 last:mb-0 ${
               i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
             }`}
           >
             {/* Dot - glowing blue */}
-            <div className='absolute left-4 md:left-1/2 w-2.5 h-2.5 rounded-full -translate-x-1/2 mt-1.5 z-10'
+            <div className='absolute left-6 md:left-1/2 w-4 h-4 rounded-full -translate-x-1/2 mt-2.5 z-10'
               style={{
                 background: 'radial-gradient(circle, #1e90ff 0%, #1e90ff 40%, transparent 70%)',
                 boxShadow: '0 0 8px rgba(30, 144, 255, 0.4)',
@@ -55,13 +55,13 @@ export default function Timeline() {
             />
 
             {/* Content - liquid glass card */}
-            <div className={`ml-10 md:ml-0 md:w-[calc(50%-2rem)] ${
+            <div className={`ml-15 md:ml-0 md:w-[calc(50%-2rem)] ${
               i % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8'
             }`}>
-              <span className='inline-block liquid-glass-text px-2.5 py-0.5 rounded-full text-[11px] font-mono text-[#1e90ff] tracking-wider mb-1.5'>{item.year}</span>
-              <div className='liquid-glass-text rounded-lg p-4'>
-                <h3 className='text-sm font-semibold text-white/80 mb-1'>{item.title}</h3>
-                <p className='text-xs text-white/35 leading-relaxed'>{item.description}</p>
+              <span className='inline-block liquid-glass-text px-4 py-1 rounded-full text-xs font-mono text-[#1e90ff] tracking-wider mb-2.5'>{item.year}</span>
+              <div className='liquid-glass-text rounded-xl p-6'>
+                <h3 className='text-base font-semibold text-white/80 mb-1.5'>{item.title}</h3>
+                <p className='text-sm text-white/35 leading-relaxed'>{item.description}</p>
               </div>
             </div>
           </div>
