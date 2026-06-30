@@ -1,13 +1,11 @@
 import { NextResponse } from 'next/server';
 
-// Static export compatibility
-export const dynamic = 'force-static';
-export const fetchCache = 'force-no-store';
-
 const GITHUB_USERNAME = 'caos1codex-hash';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 const headers: HeadersInit = {
   Accept: 'application/vnd.github.v3+json',
+  ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
 };
 
 async function fetchGitHub<T>(endpoint: string): Promise<T> {
@@ -51,6 +49,8 @@ export interface EnrichedRepo extends GitHubRepo {
   primaryLanguage: string;
   hasDemo: boolean;
   demoUrl: string;
+  hasPages: boolean;
+  pagesUrl: string;
   isArchived: boolean;
 }
 
@@ -76,17 +76,9 @@ export async function GET(request: Request) {
       );
       const commitCount = events.filter((e) => e.type === 'PushEvent').length;
 
-      const allRepos = await fetchGitHub<GitHubRepo[]>(
-        `/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
-      );
-      const totalStars = allRepos.reduce((sum, r) => sum + r.stargazers_count, 0);
-      const totalForks = allRepos.reduce((sum, r) => sum + r.forks_count, 0);
-
       return NextResponse.json({
         ...user,
         totalCommits: commitCount,
-        totalStars,
-        totalForks,
         yearsCoding: Math.max(1, new Date().getFullYear() - 2022),
       });
     }
@@ -111,7 +103,7 @@ export async function GET(request: Request) {
 
     const enriched: EnrichedRepo[] = await Promise.all(
       repos
-        .filter((r) => !r.fork)
+        .filter((r) => !r.fork && r.name !== 'caos-portfolio')
         .map(async (repo) => {
           let languages: GitHubLanguageMap = {};
           try {
@@ -119,12 +111,17 @@ export async function GET(request: Request) {
           } catch { /* skip */ }
 
           const sortedLangs = Object.entries(languages).sort((a, b) => b[1] - a[1]);
+          // GitHub Pages URL
+          const pagesUrl = `https://caos1codex-hash.github.io/${repo.name.toLowerCase()}`;
+          const hasPages = !!repo.homepage && repo.homepage !== '';
           return {
             ...repo,
             languages,
             primaryLanguage: sortedLangs[0]?.[0] || 'Unknown',
-            hasDemo: !!repo.homepage && repo.homepage !== '',
-            demoUrl: repo.homepage || '',
+            hasDemo: hasPages,
+            demoUrl: repo.homepage || pagesUrl,
+            hasPages,
+            pagesUrl,
             isArchived: repo.archived,
           };
         })
