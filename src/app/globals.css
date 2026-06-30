@@ -354,7 +354,7 @@
    SCROLLBAR
    ═══════════════════════════════════════════════════════ */
 
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: rgba(30, 144, 255, 0.15);
