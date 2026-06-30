@@ -237,7 +237,7 @@ function ProjectCard({ repo }: { repo: Repo }) {
         <div className='flex gap-0.5 mb-4 h-1 rounded-full overflow-hidden'>
           {Object.entries(repo.languages).slice(0, 5).map(([lang, bytes]) => (
             <div key={lang} className='rounded-full transition-all duration-500'
-              style={{ width: `${(bytes / totalBytes) * 100}%`, backgroundColor: langColors[lang] || '#86868b' }} />
+              style={{width: `${(bytes / totalBytes) * 100}%`, backgroundColor: langColors[lang] || '#86868b' }} />
           ))}
         </div>
       )}
@@ -246,7 +246,7 @@ function ProjectCard({ repo }: { repo: Repo }) {
         <div className='flex items-center gap-3'>
           {repo.primaryLanguage && (
             <span className='flex items-center gap-1">
-              <span className='w-2 h-2 rounded-full' style={{ backgroundColor: color }} />
+              <span className='w-2 h-2 rounded-full' style={{backgroundColor:color}} />
               {repo.primaryLanguage}
             </span>
           )}
