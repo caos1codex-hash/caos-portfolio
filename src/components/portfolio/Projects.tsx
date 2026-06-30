@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { ExternalLink, Github, Search } from 'lucide-react';
+import { ExternalLink, Github, Search, Star, GitFork } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
 import type { EnrichedRepo } from '@/app/api/github/route';
 
@@ -156,6 +156,7 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
               rel='noopener noreferrer'
               className='text-white/25 hover:text-[#0a84ff] transition-colors'
               data-cursor-hover
+              aria-label='Ver demo'
             >
               <ExternalLink className='w-3.5 h-3.5' />
             </a>
@@ -166,6 +167,7 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
             rel='noopener noreferrer'
             className='text-white/25 hover:text-white transition-colors'
             data-cursor-hover
+            aria-label='Ver en GitHub'
           >
             <Github className='w-3.5 h-3.5' />
           </a>
@@ -177,13 +179,24 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
         {repo.description || 'Sin descripción.'}
       </p>
 
+      {/* Topics */}
+      {repo.topics.length > 0 && (
+        <div className='flex flex-wrap gap-1 mb-3'>
+          {repo.topics.slice(0, 3).map(topic => (
+            <span key={topic} className='px-2 py-0.5 text-[9px] rounded-full bg-[#0a84ff]/8 text-[#0a84ff]/70'>
+              {topic}
+            </span>
+          ))}
+        </div>
+      )}
+
       {/* Language bar */}
       {totalBytes > 0 && (
         <div className='flex gap-0.5 mb-4 h-1 rounded-full overflow-hidden'>
           {Object.entries(repo.languages).slice(0, 5).map(([lang, bytes]) => (
             <div
               key={lang}
-              className='rounded-full'
+              className='rounded-full transition-all duration-500'
               style={{
                 width: `${(bytes / totalBytes) * 100}%`,
                 backgroundColor: langColors[lang] || '#86868b',
@@ -203,7 +216,14 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
             </span>
           )}
           {repo.stargazers_count > 0 && (
-            <span>★ {repo.stargazers_count}</span>
+            <span className='flex items-center gap-0.5'>
+              <Star className='w-3 h-3' /> {repo.stargazers_count}
+            </span>
+          )}
+          {repo.forks_count > 0 && (
+            <span className='flex items-center gap-0.5'>
+              <GitFork className='w-3 h-3' /> {repo.forks_count}
+            </span>
           )}
         </div>
         <span>{timeAgo()}</span>
