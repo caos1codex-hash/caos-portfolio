@@ -4,10 +4,8 @@ import { useEffect, useState } from 'react';
 import { useGsapFadeIn, useGsapLineReveal, useGsapCounter } from '@/hooks/useGsap';
 import { GitFork, Star, GitCommit, Calendar, Code2, Eye } from 'lucide-react';
 
-const GITHUB_USERNAME = 'caos1codex-hash';
-
 type StatItem = {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number;
   suffix?: string;
@@ -21,48 +19,19 @@ export default function Statistics() {
   const containerRef = useGsapFadeIn({ y: 20, delay: 0.2, duration: 0.8 });
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        // Try server API first
-        const res = await fetch('/api/github?type=user');
-        if (res.ok) {
-          const data = await res.json();
-          setStats([
-            { icon: Code2, label: 'Repositorios', value: data.public_repos || 0 },
-            { icon: GitCommit, label: 'Commits', value: data.totalCommits || 0 },
-            { icon: Star, label: 'Stars', value: data.totalStars || 0 },
-            { icon: GitFork, label: 'Forks', value: data.totalForks || 0 },
-            { icon: Calendar, label: 'Años Programando', value: data.yearsCoding || 3 },
-            { icon: Eye, label: 'Seguidores', value: data.followers || 0 },
-          ]);
-          return;
-        }
-      } catch { /* fallback */ }
-
-      // Direct GitHub API fallback
-      try {
-        const [userRes, reposRes, eventsRes] = await Promise.all([
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`),
-          fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=100`),
-        ]);
-        const user = await userRes.json();
-        const repos = await reposRes.json();
-        const events = await eventsRes.json();
-
-        const totalStars = repos.reduce((sum: number, r: any) => sum + r.stargazers_count, 0);
-        const totalForks = repos.reduce((sum: number, r: any) => sum + r.forks_count, 0);
-        const commitCount = events.filter((e: any) => e.type === 'PushEvent').length;
-
+    fetch('/api/github?type=user')
+      .then(r => r.json())
+      .then(data => {
         setStats([
-          { icon: Code2, label: 'Repositorios', value: user.public_repos || 0 },
-          { icon: GitCommit, label: 'Commits', value: commitCount },
-          { icon: Star, label: 'Stars', value: totalStars },
-          { icon: GitFork, label: 'Forks', value: totalForks },
-          { icon: Calendar, label: 'Años Programando', value: Math.max(1, new Date().getFullYear() - 2022) },
-          { icon: Eye, label: 'Seguidores', value: user.followers || 0 },
+          { icon: Code2, label: 'Repositorios', value: data.public_repos || 0 },
+          { icon: GitCommit, label: 'Commits', value: data.totalCommits || 0 },
+          { icon: Star, label: 'Stars', value: data.totalStars || 0 },
+          { icon: GitFork, label: 'Forks', value: data.totalForks || 0 },
+          { icon: Calendar, label: 'Años Programando', value: data.yearsCoding || 3 },
+          { icon: Eye, label: 'Seguidores', value: data.followers || 0 },
         ]);
-      } catch {
+      })
+      .catch(() => {
         setStats([
           { icon: Code2, label: 'Repositorios', value: 15 },
           { icon: GitCommit, label: 'Commits', value: 200 },
@@ -71,16 +40,15 @@ export default function Statistics() {
           { icon: Calendar, label: 'Años Programando', value: 3 },
           { icon: Eye, label: 'Seguidores', value: 0 },
         ]);
-      }
-    };
-    fetchStats();
+      });
   }, []);
 
   return (
-    <section id='statistics' className='py-24 md:py-32 section-padding'>
-      <p ref={labelRef} className='text-xs tracking-[0.4em] uppercase text-white/25 mb-4'>
-        Estadísticas
-      </p>
+    <section id='statistics' className='py-24 md:py-32 section-padding w-full'>
+      {/* Label */}
+      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
+        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Estadísticas</p>
+      </div>
       <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
         En Números
       </h2>
@@ -99,14 +67,16 @@ function StatCard({ icon: Icon, label, value, suffix = '' }: StatItem) {
   const countRef = useGsapCounter(value, { duration: 2 });
 
   return (
-    <div className='glass rounded-xl p-5 text-center group hover:border-[#0a84ff]/15 transition-all duration-500 card-lift'>
-      <Icon className='w-5 h-5 text-[#0a84ff] mx-auto mb-3 group-hover:scale-110 transition-transform duration-300' />
-      <span ref={countRef} className='text-2xl md:text-3xl font-bold text-white block'>
-        0
-      </span>
-      <span className='text-[10px] uppercase tracking-wider text-white/25 mt-1 block'>
-        {label}{suffix ? ` ${suffix}` : ''}
-      </span>
+    <div className='liquid-glass rounded-xl p-5 text-center group liquid-glass-lift'>
+      <div className='relative z-10'>
+        <Icon className='w-5 h-5 text-[#1e90ff] mx-auto mb-3' />
+        <span ref={countRef} className='text-2xl md:text-3xl font-bold text-white block'>
+          0
+        </span>
+        <span className='text-[10px] uppercase tracking-wider text-white/30 mt-1 block'>
+          {label}{suffix ? ` ${suffix}` : ''}
+        </span>
+      </div>
     </div>
   );
 }
