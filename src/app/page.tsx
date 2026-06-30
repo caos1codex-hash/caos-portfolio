@@ -2,8 +2,8 @@
 
 import { useEffect, useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,9 +16,9 @@ import Navigation from '@/components/portfolio/Navigation';
 import Hero from '@/components/portfolio/Hero';
 import About from '@/components/portfolio/About';
 import Skills from '@/components/portfolio/Skills';
-import Projects from '@/components/portfolio/Projects';
 import Statistics from '@/components/portfolio/Statistics';
 import Timeline from '@/components/portfolio/Timeline';
+import Projects from '@/components/portfolio/Projects';
 import Experience from '@/components/portfolio/Experience';
 import Contact from '@/components/portfolio/Contact';
 import Footer from '@/components/portfolio/Footer';
@@ -41,7 +41,8 @@ export default function Home() {
   useEffect(() => {
     if (!showContent) return;
 
-    let lenis: ReturnType<typeof import('lenis').default> | null = null;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let lenis: any = null;
 
     const init = async () => {
       const Lenis = (await import('lenis')).default;
@@ -81,20 +82,20 @@ export default function Home() {
       {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
 
       {showContent && (
-        <div className='relative z-10 min-h-screen flex flex-col'>
+        <div className='relative z-10 min-h-screen flex flex-col w-full'>
           <Navigation />
-          <main>
+          <main className='w-full'>
             <Hero />
             <div className='line-separator' />
             <About />
             <div className='line-separator' />
             <Skills />
             <div className='line-separator' />
-            <Projects />
-            <div className='line-separator' />
             <Statistics />
             <div className='line-separator' />
             <Timeline />
+            <div className='line-separator' />
+            <Projects />
             <div className='line-separator' />
             <Experience />
             <div className='line-separator' />
