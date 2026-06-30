@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import { ExternalLink, Github, Search, Eye } from 'lucide-react';
+import { Github, Search, Eye } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
 import type { EnrichedRepo } from '@/app/api/github/route';
 
@@ -151,28 +151,6 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
         <h3 className='text-base font-semibold text-white/90 group-hover:text-white transition-colors truncate flex-1'>
           {repo.name}
         </h3>
-        <div className='flex items-center gap-3 ml-2 flex-shrink-0'>
-          {repo.hasDemo && (
-            <a
-              href={repo.demoUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-white/20 hover:text-[#1e90ff] transition-colors'
-              data-cursor-hover
-            >
-              <ExternalLink className='w-5 h-5' />
-            </a>
-          )}
-          <a
-            href={repo.html_url}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-white/20 hover:text-white transition-colors'
-            data-cursor-hover
-          >
-            <Github className='w-5 h-5' />
-          </a>
-        </div>
       </div>
 
       {/* Description */}
@@ -212,17 +190,31 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
         <span>{timeAgo()}</span>
       </div>
 
-      {/* Ver en vivo button */}
-      <a
-        href={repo.hasDemo ? repo.demoUrl : repo.pagesUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='mt-5 flex items-center justify-center gap-2 w-full liquid-glass-btn py-2.5 rounded-xl text-sm text-white/50 hover:text-[#1e90ff] transition-colors relative z-10'
-        data-cursor-hover
-      >
-        <Eye className='w-4 h-4' />
-        Ver en vivo
-      </a>
+      {/* Action buttons */}
+      <div className='flex items-center gap-3 mt-5 relative z-10'>
+        <a
+          href={repo.html_url}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='flex-1 flex items-center justify-center gap-2 liquid-glass-btn py-2.5 rounded-xl text-sm text-white/50 hover:text-white transition-colors'
+          data-cursor-hover
+        >
+          <Github className='w-4 h-4' />
+          Repositorio
+        </a>
+        {repo.hasPages && (
+          <a
+            href={repo.demoUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='flex-1 flex items-center justify-center gap-2 liquid-glass-btn py-2.5 rounded-xl text-sm text-[#1e90ff] hover:text-[#00d4ff] transition-colors'
+            data-cursor-hover
+          >
+            <Eye className='w-4 h-4' />
+            Ver en vivo
+          </a>
+        )}
+      </div>
     </div>
   );
 }
