@@ -62,12 +62,12 @@ export default function CustomCursor() {
     <>
       <div
         ref={dotRef}
-        className='fixed top-0 left-0 w-1.5 h-1.5 rounded-full bg-white pointer-events-none z-[9998] hidden md:block'
+        className='fixed top-0 left-0 w-2.5 h-2.5 rounded-full bg-white pointer-events-none z-[9998] hidden md:block'
         style={{ willChange: 'transform' }}
       />
       <div
         ref={ringRef}
-        className='fixed top-0 left-0 w-8 h-8 rounded-full border border-white/15 pointer-events-none z-[9997] hidden md:block -translate-x-1/2 -translate-y-1/2'
+        className='fixed top-0 left-0 w-12 h-12 rounded-full border border-white/15 pointer-events-none z-[9997] hidden md:block -translate-x-1/2 -translate-y-1/2'
         style={{ willChange: 'transform' }}
       />
     </>
