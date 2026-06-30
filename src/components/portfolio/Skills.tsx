@@ -117,23 +117,23 @@ export default function Skills() {
   const visible = active === 'all' ? CATEGORIES : CATEGORIES.filter(c => c.id === active);
 
   return (
-    <section id='skills' className='py-24 md:py-32 section-padding w-full'>
+    <section id='skills' className='py-36 md:py-48 section-padding w-full'>
       {/* Label */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Habilidades</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Habilidades</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         Technologies & Tools
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-8' />
+      <div ref={lineRef} className='line-separator w-24 mb-12' />
 
       {/* Tabs - liquid glass */}
-      <div ref={tabsRef} className='flex flex-wrap gap-2 mb-10'>
+      <div ref={tabsRef} className='flex flex-wrap gap-3 mb-15'>
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActive(tab.id)}
-            className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-300 ${
+            className={`px-6 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
               active === tab.id
                 ? 'liquid-glass-btn text-white border-[#1e90ff]/20'
                 : 'liquid-glass-btn text-white/40'
@@ -146,19 +146,19 @@ export default function Skills() {
       </div>
 
       {/* Skills grid - liquid glass cards */}
-      <div ref={gridRef} className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
+      <div ref={gridRef} className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
         {visible.map(cat => (
-          <div key={cat.id} className='liquid-glass rounded-xl p-5 group liquid-glass-lift'>
-            <h3 className='text-xs font-semibold uppercase tracking-wider text-[#1e90ff] mb-4 relative z-10'>{cat.label}</h3>
-            <div className='grid grid-cols-3 gap-2.5 relative z-10'>
+          <div key={cat.id} className='liquid-glass rounded-2xl p-8 group liquid-glass-lift'>
+            <h3 className='text-sm font-semibold uppercase tracking-wider text-[#1e90ff] mb-6 relative z-10'>{cat.label}</h3>
+            <div className='grid grid-cols-3 gap-4 relative z-10'>
               {cat.skills.map(skill => (
                 <div
                   key={skill.name}
-                  className='flex flex-col items-center gap-1.5 py-2.5 px-1 rounded-lg hover:bg-white/[0.04] transition-colors liquid-glass-btn'
+                  className='flex flex-col items-center gap-2.5 py-4 px-1.5 rounded-xl hover:bg-white/[0.04] transition-colors liquid-glass-btn'
                   data-cursor-hover
                 >
-                  <skill.icon className='w-4 h-4 text-white/30 group-hover:text-[#1e90ff] transition-colors' />
-                  <span className='text-[10px] text-white/30 group-hover:text-white/60 text-center leading-tight transition-colors'>
+                  <skill.icon className='w-6 h-6 text-white/30 group-hover:text-[#1e90ff] transition-colors' />
+                  <span className='text-xs text-white/30 group-hover:text-white/60 text-center leading-tight transition-colors'>
                     {skill.name}
                   </span>
                 </div>
