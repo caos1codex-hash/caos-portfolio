@@ -1,4 +1,6 @@
-// Client-side GitHub API calls (works on static sites like GitHub Pages)
+// Client-side GitHub data loading.
+// In production (GitHub Pages): loads from pre-built static JSON (no rate limits).
+// In dev: falls back to live GitHub API.
 
 const GITHUB_USERNAME = 'caos1codex-hash';
 
@@ -26,9 +28,7 @@ interface GitHubRepo {
   has_pages: boolean;
 }
 
-interface GitHubLanguageMap {
-  [key: string]: number;
-}
+interface GitHubLanguageMap { [key: string]: number }
 
 export interface EnrichedRepo extends GitHubRepo {
   languages: GitHubLanguageMap;
@@ -40,43 +40,78 @@ export interface EnrichedRepo extends GitHubRepo {
   isArchived: boolean;
 }
 
+export interface UserStats {
+  public_repos: number;
+  followers: number;
+  following: number;
+  created_at: string;
+  avatar_url: string;
+  bio: string | null;
+  login: string;
+  totalCommits: number;
+  yearsCoding: number;
+}
+
+interface PrebuiltData extends UserStats {
+  repos: EnrichedRepo[];
+}
+
+let prebuiltCache: PrebuiltData | null | undefined = undefined;
+
+async function getPrebuiltData(): Promise<PrebuiltData | null> {
+  if (prebuiltCache !== undefined) return prebuiltCache;
+  prebuiltCache = null;
+  try {
+    const res = await fetch('./github-data.json');
+    if (res.ok) {
+      prebuiltCache = await res.json();
+    }
+  } catch { /* not available */ }
+  return prebuiltCache;
+}
+
+// --- Live API fallback ---
+
 async function fetchPublic<T>(url: string): Promise<T> {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
   return res.json();
 }
 
-export async function fetchUserStats() {
+export async function fetchUserStats(): Promise<UserStats> {
+  const prebuilt = await getPrebuiltData();
+  if (prebuilt) {
+    const { repos, ...userStats } = prebuilt;
+    return userStats;
+  }
+
+  // Fallback: live API
   const [user, events] = await Promise.all([
     fetchPublic<{
-      public_repos: number;
-      followers: number;
-      following: number;
-      created_at: string;
-      avatar_url: string;
-      bio: string | null;
-      login: string;
+      public_repos: number; followers: number; following: number;
+      created_at: string; avatar_url: string; bio: string | null; login: string;
     }>(`https://api.github.com/users/${GITHUB_USERNAME}`),
     fetchPublic<Array<{ type: string; created_at: string }>>(
       `https://api.github.com/users/${GITHUB_USERNAME}/events/public?per_page=100`
     ),
   ]);
 
-  const commitCount = events.filter((e) => e.type === 'PushEvent').length;
-
   return {
     ...user,
-    totalCommits: commitCount,
+    totalCommits: events.filter((e) => e.type === 'PushEvent').length,
     yearsCoding: Math.max(1, new Date().getFullYear() - 2022),
   };
 }
 
 export async function fetchRepos(): Promise<EnrichedRepo[]> {
+  const prebuilt = await getPrebuiltData();
+  if (prebuilt) return prebuilt.repos;
+
+  // Fallback: live API
   const repos = await fetchPublic<GitHubRepo[]>(
     `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
   );
 
-  // Fetch languages for all repos (with concurrency limit)
   const batchSize = 5;
   const enriched: EnrichedRepo[] = [];
 

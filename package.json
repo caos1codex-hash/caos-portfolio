@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build",
-    "build:static": "NEXT_STATIC_EXPORT=true next build",
+    "prebuild:github": "bun run scripts/fetch-github-data.ts",
+    "build:static": "bun run prebuild:github && NEXT_STATIC_EXPORT=true next build",
     "build:standalone": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
     "start": "NODE_ENV=production bun .next/standalone/server.js 2>&1 | tee server.log",
     "lint": "eslint .",
