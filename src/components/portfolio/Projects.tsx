@@ -51,32 +51,32 @@ export default function Projects() {
   }, [repos, search, sort, langFilter]);
 
   return (
-    <section id='projects' className='py-24 md:py-32 section-padding w-full'>
+    <section id='projects' className='py-36 md:py-48 section-padding w-full'>
       {/* Label */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Proyectos</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Proyectos</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         Mi Trabajo
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-8' />
+      <div ref={lineRef} className='line-separator w-24 mb-12' />
 
       {/* Controls - liquid glass inputs */}
-      <div className='flex flex-col sm:flex-row gap-3 mb-8'>
-        <div className='relative flex-1 max-w-sm'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20' />
+      <div className='flex flex-col sm:flex-row gap-5 mb-12'>
+        <div className='relative flex-1 max-w-md'>
+          <Search className='absolute left-5 top-1/2 -translate-y-1/2 w-6 h-6 text-white/20' />
           <input
             type='text'
             placeholder='Buscar proyectos...'
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className='w-full pl-10 pr-4 py-2.5 text-sm liquid-glass-input rounded-xl text-white placeholder-white/20 outline-none'
+            className='w-full pl-14 pr-6 py-4 text-base liquid-glass-input rounded-xl text-white placeholder-white/20 outline-none'
           />
         </div>
         <select
           value={langFilter}
           onChange={e => setLangFilter(e.target.value)}
-          className='px-4 py-2.5 text-sm liquid-glass-input rounded-xl text-white/50 outline-none appearance-none cursor-pointer'
+          className='px-6 py-4 text-base liquid-glass-input rounded-xl text-white/50 outline-none appearance-none cursor-pointer'
         >
           {languages.map(l => (
             <option key={l} value={l} className='bg-zinc-900'>{l === 'all' ? 'Todos los lenguajes' : l}</option>
@@ -85,7 +85,7 @@ export default function Projects() {
         <select
           value={sort}
           onChange={e => setSort(e.target.value as SortKey)}
-          className='px-4 py-2.5 text-sm liquid-glass-input rounded-xl text-white/50 outline-none appearance-none cursor-pointer'
+          className='px-6 py-4 text-base liquid-glass-input rounded-xl text-white/50 outline-none appearance-none cursor-pointer'
         >
           <option value='updated' className='bg-zinc-900'>Más recientes</option>
           <option value='stars' className='bg-zinc-900'>Más stars</option>
@@ -95,21 +95,21 @@ export default function Projects() {
 
       {/* Projects grid */}
       {loading ? (
-        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
+        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className='liquid-glass rounded-xl p-5 animate-pulse'>
-              <div className='h-4 bg-white/[0.03] rounded w-3/4 mb-3 relative z-10' />
-              <div className='h-3 bg-white/[0.02] rounded w-full mb-2 relative z-10' />
-              <div className='h-3 bg-white/[0.02] rounded w-2/3 relative z-10' />
+            <div key={i} className='liquid-glass rounded-2xl p-8 animate-pulse'>
+              <div className='h-6 bg-white/[0.03] rounded w-3/4 mb-5 relative z-10' />
+              <div className='h-5 bg-white/[0.02] rounded w-full mb-3 relative z-10' />
+              <div className='h-5 bg-white/[0.02] rounded w-2/3 relative z-10' />
             </div>
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className='liquid-glass-text rounded-xl py-16 text-center'>
+        <div className='liquid-glass-text rounded-2xl py-24 text-center'>
           <p className='text-white/25'>No se encontraron proyectos.</p>
         </div>
       ) : (
-        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-5'>
+        <div className='grid sm:grid-cols-2 lg:grid-cols-3 gap-8'>
           {filtered.map(repo => (
             <ProjectCard key={repo.id} repo={repo} />
           ))}
@@ -143,15 +143,15 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
 
   return (
     <div
-      className='liquid-glass rounded-xl p-5 group liquid-glass-lift'
+      className='liquid-glass rounded-2xl p-8 group liquid-glass-lift'
       data-cursor-hover
     >
       {/* Header */}
-      <div className='flex items-start justify-between mb-3 relative z-10'>
-        <h3 className='text-sm font-semibold text-white/90 group-hover:text-white transition-colors truncate flex-1'>
+      <div className='flex items-start justify-between mb-5 relative z-10'>
+        <h3 className='text-base font-semibold text-white/90 group-hover:text-white transition-colors truncate flex-1'>
           {repo.name}
         </h3>
-        <div className='flex items-center gap-2 ml-2 flex-shrink-0'>
+        <div className='flex items-center gap-3 ml-2 flex-shrink-0'>
           {repo.hasDemo && (
             <a
               href={repo.demoUrl}
@@ -160,7 +160,7 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
               className='text-white/20 hover:text-[#1e90ff] transition-colors'
               data-cursor-hover
             >
-              <ExternalLink className='w-3.5 h-3.5' />
+              <ExternalLink className='w-5 h-5' />
             </a>
           )}
           <a
@@ -170,19 +170,19 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
             className='text-white/20 hover:text-white transition-colors'
             data-cursor-hover
           >
-            <Github className='w-3.5 h-3.5' />
+            <Github className='w-5 h-5' />
           </a>
         </div>
       </div>
 
       {/* Description */}
-      <p className='text-xs text-white/30 leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem] relative z-10'>
+      <p className='text-sm text-white/30 leading-relaxed mb-6 line-clamp-2 min-h-[4rem] relative z-10'>
         {repo.description || 'Sin descripción.'}
       </p>
 
       {/* Language bar */}
       {totalBytes > 0 && (
-        <div className='flex gap-0.5 mb-4 h-1 rounded-full overflow-hidden relative z-10'>
+        <div className='flex gap-1 mb-6 h-1.5 rounded-full overflow-hidden relative z-10'>
           {Object.entries(repo.languages).slice(0, 5).map(([lang, bytes]) => (
             <div
               key={lang}
@@ -197,11 +197,11 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
       )}
 
       {/* Footer */}
-      <div className='flex items-center justify-between text-[10px] text-white/20 relative z-10'>
-        <div className='flex items-center gap-3'>
+      <div className='flex items-center justify-between text-xs text-white/20 relative z-10'>
+        <div className='flex items-center gap-5'>
           {repo.primaryLanguage && (
-            <span className='flex items-center gap-1'>
-              <span className='w-2 h-2 rounded-full' style={{ backgroundColor: color }} />
+            <span className='flex items-center gap-1.5'>
+              <span className='w-3 h-3 rounded-full' style={{ backgroundColor: color }} />
               {repo.primaryLanguage}
             </span>
           )}
