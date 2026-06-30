@@ -1,7 +1,7 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useRef, useMemo, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /* ─── Vertex Shader ─── */
@@ -13,7 +13,7 @@ const vertexShader = /* glsl */ `
   }
 `;
 
-/* ─── Fragment Shader — simplex noise nebula ─── */
+/* ─── Fragment Shader — Enhanced CAOS Nebula ─── */
 const fragmentShader = /* glsl */ `
   precision highp float;
   uniform float uTime;
@@ -21,9 +21,9 @@ const fragmentShader = /* glsl */ `
   uniform vec2 uMouse;
   varying vec2 vUv;
 
-  // Simplex 3D noise
   vec4 permute(vec4 x){ return mod(((x*34.0)+1.0)*x, 289.0); }
   vec4 taylorInvSqrt(vec4 r){ return 1.79284291400159 - 0.85373472095314 * r; }
+
   float snoise(vec3 v){
     const vec2 C = vec2(1.0/6.0, 1.0/3.0);
     const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
@@ -69,34 +69,54 @@ const fragmentShader = /* glsl */ `
 
   void main() {
     vec2 uv = vUv;
-    float t = uTime * 0.04;
+    float t = uTime * 0.03;
+    vec2 mouse = uMouse * 0.04;
 
-    // Mouse influence (subtle)
-    vec2 mouse = uMouse * 0.03;
+    // Multi-layered noise for rich nebula
+    float n1 = snoise(vec3(uv * 1.5 + mouse, t)) * 0.5 + 0.5;
+    float n2 = snoise(vec3(uv * 3.0 - mouse * 0.5, t * 0.7)) * 0.5 + 0.5;
+    float n3 = snoise(vec3(uv * 6.0, t * 0.4)) * 0.5 + 0.5;
+    float n4 = snoise(vec3(uv * 12.0, t * 0.25)) * 0.5 + 0.5;
 
-    // Layered noise for nebula
-    float n1 = snoise(vec3(uv * 2.0 + mouse, t)) * 0.5 + 0.5;
-    float n2 = snoise(vec3(uv * 4.0 - mouse * 0.5, t * 0.7)) * 0.5 + 0.5;
-    float n3 = snoise(vec3(uv * 8.0, t * 0.5)) * 0.5 + 0.5;
+    // Combine layers with power falloff
+    float nebula = n1 * 0.5 + n2 * 0.25 + n3 * 0.15 + n4 * 0.1;
+    nebula = pow(nebula, 2.5) * 0.12;
 
-    // Combine layers
-    float nebula = n1 * 0.6 + n2 * 0.3 + n3 * 0.1;
-    nebula = pow(nebula, 3.0) * 0.15; // Very subtle
+    // CAOS color palette: deep space blues, cyans, purples
+    vec3 col1 = vec3(0.02, 0.04, 0.12);  // Deep navy
+    vec3 col2 = vec3(0.06, 0.10, 0.18);  // Dark blue
+    vec3 col3 = vec3(0.08, 0.03, 0.14);  // Deep purple
+    vec3 col4 = vec3(0.00, 0.08, 0.14);  // Dark cyan
 
-    // Color mixing: dark blue + dark purple
-    vec3 col1 = vec3(0.04, 0.08, 0.18); // Deep blue
-    vec3 col2 = vec3(0.10, 0.04, 0.16); // Deep purple
-    vec3 color = mix(col1, col2, nebula);
+    // Smooth color mixing based on noise layers
+    vec3 color = mix(col1, col2, n1);
+    color = mix(color, col3, nebula * 1.2);
+    color = mix(color, col4, n2 * 0.3);
 
-    // Stars (small bright dots)
-    float stars = pow(n3, 12.0) * 0.4;
-    color += vec3(stars * 0.8, stars * 0.85, stars);
+    // Subtle CAOS accent glow (blue/cyan)
+    float accentGlow = pow(nebula, 1.5) * 0.08;
+    color += vec3(0.04, 0.12, 0.20) * accentGlow;
 
-    // Vignette
-    float vignette = 1.0 - smoothstep(0.3, 1.2, length(uv - 0.5));
-    color *= vignette * 0.8;
+    // Star field - multiple layers
+    float stars1 = pow(n3, 16.0) * 0.5;
+    float stars2 = pow(n4, 20.0) * 0.3;
+    float twinkle = sin(uTime * 2.0 + n3 * 50.0) * 0.3 + 0.7;
+    color += vec3(stars1 * twinkle * 0.7, stars1 * twinkle * 0.8, stars1 * twinkle);
+    color += vec3(stars2 * 0.9, stars2, stars2 * 0.95);
 
-    gl_FragColor = vec4(color, 1.0);
+    // Subtle nebula color bands
+    float band = snoise(vec3(uv.x * 0.5, 0.0, t * 0.1)) * 0.5 + 0.5;
+    color += vec3(0.01, 0.02, 0.04) * band * nebula;
+
+    // Vignette - dramatic edge darkening
+    float vignette = 1.0 - smoothstep(0.2, 1.4, length(uv - 0.5));
+    color *= vignette;
+
+    // Very subtle grain
+    float grain = (fract(sin(dot(uv * uTime * 0.01, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.008;
+    color += grain;
+
+    gl_FragColor = vec4(max(color, vec3(0.0)), 1.0);
   }
 `;
 
@@ -114,6 +134,15 @@ function ShaderPlane() {
     []
   );
 
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', onMove);
+    return () => window.removeEventListener('mousemove', onMove);
+  }, []);
+
   useFrame((state) => {
     if (!meshRef.current) return;
     const mat = meshRef.current.material as THREE.ShaderMaterial;
@@ -124,19 +153,10 @@ function ShaderPlane() {
       state.gl.domElement.height
     );
 
-    // Smooth mouse
-    smoothMouse.current.x += (mouseRef.current.x - smoothMouse.current.x) * 0.02;
-    smoothMouse.current.y += (mouseRef.current.y - smoothMouse.current.y) * 0.02;
+    smoothMouse.current.x += (mouseRef.current.x - smoothMouse.current.x) * 0.015;
+    smoothMouse.current.y += (mouseRef.current.y - smoothMouse.current.y) * 0.015;
     mat.uniforms.uMouse.value.set(smoothMouse.current.x, smoothMouse.current.y);
   });
-
-  // Mouse tracking
-  if (typeof window !== 'undefined') {
-    window.addEventListener('mousemove', (e) => {
-      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    });
-  }
 
   return (
     <mesh ref={meshRef}>
@@ -148,6 +168,63 @@ function ShaderPlane() {
         depthWrite={false}
       />
     </mesh>
+  );
+}
+
+/* ─── Floating particles layer ─── */
+function FloatingParticles() {
+  const pointsRef = useRef<THREE.Points>(null);
+  const count = 150;
+
+  const { positions, sizes, opacities } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const sz = new Float32Array(count);
+    const op = new Float32Array(count);
+
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 4;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 4;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 2;
+      sz[i] = Math.random() * 2 + 0.5;
+      op[i] = Math.random() * 0.4 + 0.1;
+    }
+    return { positions: pos, sizes: sz, opacities: op };
+  }, []);
+
+  useFrame((state) => {
+    if (!pointsRef.current) return;
+    const geo = pointsRef.current.geometry;
+    const posAttr = geo.getAttribute('position') as THREE.BufferAttribute;
+    const arr = posAttr.array as Float32Array;
+
+    const t = state.clock.elapsedTime;
+
+    for (let i = 0; i < count; i++) {
+      arr[i * 3 + 1] += Math.sin(t * 0.2 + i) * 0.0005;
+      arr[i * 3] += Math.cos(t * 0.15 + i * 0.5) * 0.0003;
+    }
+    posAttr.needsUpdate = true;
+  });
+
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach='attributes-position'
+          args={[positions, 3]}
+          count={count}
+        />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.015}
+        color='#4488cc'
+        transparent
+        opacity={0.3}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </points>
   );
 }
 
@@ -164,6 +241,7 @@ export default function WebGLBackground() {
         style={{ background: '#000' }}
       >
         <ShaderPlane />
+        <FloatingParticles />
       </Canvas>
     </div>
   );
