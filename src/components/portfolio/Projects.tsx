@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { Github, Search, Eye } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
-import type { EnrichedRepo } from '@/app/api/github/route';
+import { fetchRepos, type EnrichedRepo } from '@/lib/github-client';
 
 type SortKey = 'updated' | 'stars' | 'name';
 
@@ -19,8 +19,7 @@ export default function Projects() {
   const lineRef = useGsapLineReveal();
 
   useEffect(() => {
-    fetch('/api/github?type=repos')
-      .then(r => r.json())
+    fetchRepos()
       .then(data => { setRepos(Array.isArray(data) ? data : []); })
       .catch(() => setRepos([]))
       .finally(() => setLoading(false));

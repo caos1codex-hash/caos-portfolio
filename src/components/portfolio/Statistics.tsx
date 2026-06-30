@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useGsapFadeIn, useGsapLineReveal, useGsapCounter } from '@/hooks/useGsap';
+import { fetchUserStats } from '@/lib/github-client';
 import { GitFork, Star, GitCommit, Calendar, Code2, Eye } from 'lucide-react';
 
 type StatItem = {
@@ -19,8 +20,7 @@ export default function Statistics() {
   const containerRef = useGsapFadeIn({ y: 20, delay: 0.2, duration: 0.8 });
 
   useEffect(() => {
-    fetch('/api/github?type=user')
-      .then(r => r.json())
+    fetchUserStats()
       .then(data => {
         setStats([
           { icon: Code2, label: 'Repositorios', value: data.public_repos || 0 },
