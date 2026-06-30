@@ -8,23 +8,14 @@ export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const btn1Ref = useRef<HTMLButtonElement>(null);
   const btn2Ref = useRef<HTMLButtonElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.2 });
 
-      // Background glow
-      tl.fromTo('[data-hero="glow"]',
-        { opacity: 0, scale: 0.6 },
-        { opacity: 1, scale: 1, duration: 1.5, ease: 'power2.out' },
-        0
-      );
-
       tl.fromTo('[data-hero="label"]',
         { opacity: 0, y: 20, filter: 'blur(6px)' },
-        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' },
-        0.4
+        { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out' }
       )
       .fromTo('[data-hero="name1"]',
         { opacity: 0, y: 30, filter: 'blur(8px)' },
@@ -37,8 +28,8 @@ export default function Hero() {
         '-=0.6'
       )
       .fromTo('[data-hero="caos"]',
-        { opacity: 0, scale: 0.85, filter: 'blur(10px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.1, ease: 'power3.out' },
+        { opacity: 0, scale: 0.9, filter: 'blur(10px)' },
+        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1, ease: 'power3.out' },
         '-=0.5'
       )
       .fromTo('[data-hero="subtitle"]',
@@ -52,8 +43,8 @@ export default function Hero() {
         '-=0.3'
       )
       .fromTo('[data-hero="buttons"] > *',
-        { opacity: 0, y: 20, scale: 0.95 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12, ease: 'power3.out' },
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out' },
         '-=0.3'
       )
       .fromTo('[data-hero="scroll"]',
@@ -61,22 +52,11 @@ export default function Hero() {
         { opacity: 1, duration: 0.6, ease: 'power2.out' },
         '-=0.1'
       );
-
-      // Continuous glow pulse
-      gsap.to(glowRef.current, {
-        scale: 1.1,
-        opacity: 0.7,
-        duration: 4,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-      });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Magnetic button effect
   const handleMouseMove = useCallback((e: React.MouseEvent, ref: React.RefObject<HTMLButtonElement | null>) => {
     const btn = ref.current;
     if (!btn) return;
@@ -94,27 +74,18 @@ export default function Hero() {
     <section
       id='hero'
       ref={containerRef}
-      className='relative min-h-screen flex flex-col items-center justify-center overflow-hidden'
+      className='relative min-h-screen flex flex-col items-center justify-center overflow-hidden w-full'
     >
-      {/* Ambient glow behind CAOS */}
-      <div
-        data-hero='glow'
-        ref={glowRef}
-        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full opacity-0 pointer-events-none'
-        style={{
-          background: 'radial-gradient(circle, rgba(10,132,255,0.12) 0%, rgba(0,212,255,0.04) 40%, transparent 70%)',
-          filter: 'blur(80px)',
-        }}
-      />
-
-      <div className='relative z-10 flex flex-col items-center text-center px-6 max-w-4xl mx-auto'>
-        {/* Label */}
-        <span
+      <div className='relative z-10 flex flex-col items-center text-center px-6 max-w-5xl mx-auto'>
+        {/* Label - liquid glass pill */}
+        <div
           data-hero='label'
-          className='text-xs sm:text-sm tracking-[0.4em] uppercase text-white/30 mb-8'
+          className='liquid-glass-text px-5 py-2 rounded-full mb-8'
         >
-          Hello, I&apos;m
-        </span>
+          <span className='text-xs sm:text-sm tracking-[0.4em] uppercase text-white/40'>
+            Hello, I&apos;m
+          </span>
+        </div>
 
         {/* Name */}
         <h1
@@ -130,64 +101,72 @@ export default function Hero() {
           Chávez Villalba
         </h1>
 
-        {/* CAOS */}
-        <h2
+        {/* CAOS - liquid glass container */}
+        <div
           data-hero='caos'
-          className='text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] font-black tracking-wider mt-2 md:mt-4 animate-shimmer'
-          style={{
-            background: 'linear-gradient(90deg, #ffffff 0%, #0a84ff 25%, #00d4ff 50%, #8b5cf6 75%, #ffffff 100%)',
-            backgroundSize: '200% 100%',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
+          className='relative mt-2 md:mt-4'
         >
-          CAOS
-        </h2>
+          <div className='absolute -inset-8 bg-[#1e90ff]/[0.03] rounded-full blur-3xl' />
+          <h2
+            className='text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] font-black tracking-wider animate-shimmer relative'
+            style={{
+              background: 'linear-gradient(90deg, #ffffff 0%, #1e90ff 25%, #00d4ff 50%, #1e90ff 75%, #ffffff 100%)',
+              backgroundSize: '200% 100%',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            CAOS
+          </h2>
+        </div>
 
-        {/* Subtitle */}
-        <p
+        {/* Subtitle - liquid glass container */}
+        <div
           data-hero='subtitle'
-          className='text-sm sm:text-base md:text-lg text-white/40 mt-6 md:mt-8 tracking-wide'
+          className='liquid-glass-text px-6 py-2 rounded-full mt-6 md:mt-8'
         >
-          Full Stack Developer • Creative Programmer • 17 Years Old
-        </p>
+          <p className='text-sm sm:text-base md:text-lg text-white/50 tracking-wide'>
+            Full Stack Developer &bull; Creative Programmer &bull; 17 Years Old
+          </p>
+        </div>
 
         {/* Description */}
         <p
           data-hero='desc'
-          className='text-sm sm:text-base text-white/25 mt-4 max-w-xl leading-relaxed'
+          className='text-sm sm:text-base text-white/30 mt-4 max-w-xl leading-relaxed'
         >
           From Chaos to Code. Transformo ideas en experiencias digitales extraordinarias.
           Especializado en crear aplicaciones web modernas, rápidas y elegantes.
         </p>
 
-        {/* Buttons */}
+        {/* Buttons - liquid glass */}
         <div data-hero='buttons' className='flex flex-col sm:flex-row items-center gap-4 mt-10 md:mt-12'>
           <button
             ref={btn1Ref}
             onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
             onMouseMove={(e) => handleMouseMove(e, btn1Ref)}
             onMouseLeave={() => handleMouseLeave(btn1Ref)}
-            className='magnetic-btn group relative flex items-center gap-2.5 px-7 py-3.5 bg-[#0a84ff] hover:bg-[#0070e0] text-white text-sm font-medium rounded-lg transition-colors overflow-hidden'
+            className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white text-sm font-medium rounded-xl'
             data-cursor-hover
           >
             <span className='relative z-10 flex items-center gap-2.5'>
               Ver Proyectos
               <ArrowRight className='w-4 h-4 transition-transform group-hover:translate-x-0.5' />
             </span>
-            <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700' />
           </button>
           <button
             ref={btn2Ref}
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
             onMouseMove={(e) => handleMouseMove(e, btn2Ref)}
             onMouseLeave={() => handleMouseLeave(btn2Ref)}
-            className='magnetic-btn group flex items-center gap-2.5 px-7 py-3.5 border border-white/10 hover:border-white/20 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:bg-white/[0.03]'
+            className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white/70 hover:text-white text-sm font-medium rounded-xl'
             data-cursor-hover
           >
-            Contactar
-            <Send className='w-4 h-4 transition-transform group-hover:translate-x-0.5' />
+            <span className='relative z-10 flex items-center gap-2.5'>
+              Contactar
+              <Send className='w-4 h-4 transition-transform group-hover:translate-x-0.5' />
+            </span>
           </button>
         </div>
       </div>
@@ -197,9 +176,9 @@ export default function Hero() {
         data-hero='scroll'
         className='absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2'
       >
-        <span className='text-[10px] tracking-[0.3em] uppercase text-white/20'>Scroll</span>
-        <div className='animate-bounce-slow'>
-          <ChevronDown className='w-4 h-4 text-white/20' />
+        <span className='text-[10px] tracking-[0.3em] uppercase text-white/15'>Scroll</span>
+        <div className='animate-bounce'>
+          <ChevronDown className='w-4 h-4 text-white/15' />
         </div>
       </div>
     </section>
