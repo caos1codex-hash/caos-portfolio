@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -33,6 +33,7 @@ jobs:
         run: bun run build:static
         env:
           NEXT_STATIC_EXPORT: "true"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add .nojekyll
         run: touch ./out/.nojekyll
