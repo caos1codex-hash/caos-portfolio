@@ -17,6 +17,19 @@ async function fetchGitHub<T>(endpoint: string): Promise<T> {
   return res.json();
 }
 
+// Check if GitHub Pages is enabled for a repo
+async function checkHasPages(repoName: string): Promise<boolean> {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_USERNAME}/${repoName}/pages`, {
+      headers,
+      next: { revalidate: 3600 },
+    });
+    return res.status === 200;
+  } catch {
+    return false;
+  }
+}
+
 interface GitHubRepo {
   id: number;
   name: string;
@@ -111,9 +124,10 @@ export async function GET(request: Request) {
           } catch { /* skip */ }
 
           const sortedLangs = Object.entries(languages).sort((a, b) => b[1] - a[1]);
-          // GitHub Pages URL
+          // GitHub Pages: check via API, fallback to homepage field
           const pagesUrl = `https://caos1codex-hash.github.io/${repo.name.toLowerCase()}`;
-          const hasPages = !!repo.homepage && repo.homepage !== '';
+          const pagesEnabled = await checkHasPages(repo.name);
+          const hasPages = pagesEnabled || !!repo.homepage;
           return {
             ...repo,
             languages,
