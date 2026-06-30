@@ -3,12 +3,33 @@
 import { useEffect, useState, useMemo, useCallback } from 'react';
 import { ExternalLink, Github, Search, Star, GitFork } from 'lucide-react';
 import { useGsapFadeIn, useGsapLineReveal } from '@/hooks/useGsap';
-import type { EnrichedRepo } from '@/app/api/github/route';
 
 type SortKey = 'updated' | 'stars' | 'name';
 
+interface Repo {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  language: string | null;
+  topics: string[];
+  archived: boolean;
+  stargazers_count: number;
+  forks_count: number;
+  updated_at: string;
+  languages_url: string;
+  languages: { [key: string]: number };
+  primaryLanguage: string;
+  hasDemo: boolean;
+  demoUrl: string;
+  isArchived: boolean;
+}
+
+const GITHUB_USERNAME = 'caos1codex-hash';
+
 export default function Projects() {
-  const [repos, setRepos] = useState<EnrichedRepo[]>([]);
+  const [repos, setRepos] = useState<Repo[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortKey>('updated');
@@ -19,11 +40,49 @@ export default function Projects() {
   const lineRef = useGsapLineReveal();
 
   useEffect(() => {
-    fetch('/api/github?type=repos')
-      .then(r => r.json())
-      .then(data => { setRepos(Array.isArray(data) ? data : []); })
-      .catch(() => setRepos([]))
-      .finally(() => setLoading(false));
+    // Try /api/github first, fallback to direct GitHub API
+    const fetchData = async () => {
+      try {
+        const res = await fetch('/api/github?type=repos');
+        if (res.ok) {
+          const data = await res.json();
+          setRepos(Array.isArray(data) ? data : []);
+          setLoading(false);
+          return;
+        }
+      } catch { /* fallback */ }
+
+      // Direct GitHub API fallback (for static export)
+      try {
+        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
+        const data = await res.json();
+        const enriched: Repo[] = await Promise.all(
+          data
+            .filter((r: Repo) => !r.fork)
+            .map(async (repo: any) => {
+              let languages: { [key: string]: number } = {};
+              try {
+                const langRes = await fetch(repo.languages_url);
+                languages = await langRes.json();
+              } catch { /* skip */ }
+              const sortedLangs = Object.entries(languages).sort((a, b) => b[1] - a[1]);
+              return {
+                ...repo,
+                languages,
+                primaryLanguage: sortedLangs[0]?.[0] || 'Unknown',
+                hasDemo: !!repo.homepage && repo.homepage !== '',
+                demoUrl: repo.homepage || '',
+                isArchived: repo.archived,
+              };
+            })
+        );
+        setRepos(enriched);
+      } catch {
+        setRepos([]);
+      }
+      setLoading(false);
+    };
+    fetchData();
   }, []);
 
   const languages = useMemo(() => {
@@ -116,13 +175,12 @@ export default function Projects() {
   );
 }
 
-function ProjectCard({ repo }: { repo: EnrichedRepo }) {
+function ProjectCard({ repo }: { repo: Repo }) {
   const langColors: Record<string, string> = {
     TypeScript: '#3178c6', JavaScript: '#f1e05a', Python: '#3572A5',
     HTML: '#e34c26', CSS: '#563d7c', PHP: '#4F5D95',
     Shell: '#89e051', Ruby: '#701516', Go: '#00ADD8',
     Java: '#b07219', 'C++': '#f34b7d', Rust: '#dea584',
-    Lua: '#000080', Swift: '#F05138', Kotlin: '#A97BFF',
   };
 
   const color = langColors[repo.primaryLanguage] || '#86868b';
@@ -143,43 +201,28 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
       className='glass rounded-xl p-5 group hover:border-[#0a84ff]/15 transition-all duration-500 card-lift'
       data-cursor-hover
     >
-      {/* Header */}
       <div className='flex items-start justify-between mb-3'>
         <h3 className='text-sm font-semibold text-white/90 group-hover:text-white transition-colors truncate flex-1'>
           {repo.name}
         </h3>
         <div className='flex items-center gap-2 ml-2 flex-shrink-0'>
           {repo.hasDemo && (
-            <a
-              href={repo.demoUrl}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-white/25 hover:text-[#0a84ff] transition-colors'
-              data-cursor-hover
-              aria-label='Ver demo'
-            >
+            <a href={repo.demoUrl} target='_blank' rel='noopener noreferrer'
+              className='text-white/25 hover:text-[#0a84ff] transition-colors' data-cursor-hover aria-label='Ver demo'>
               <ExternalLink className='w-3.5 h-3.5' />
             </a>
           )}
-          <a
-            href={repo.html_url}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-white/25 hover:text-white transition-colors'
-            data-cursor-hover
-            aria-label='Ver en GitHub'
-          >
+          <a href={repo.html_url} target='_blank' rel='noopener noreferrer'
+            className='text-white/25 hover:text-white transition-colors' data-cursor-hover aria-label='Ver en GitHub'>
             <Github className='w-3.5 h-3.5' />
           </a>
         </div>
       </div>
 
-      {/* Description */}
       <p className='text-xs text-white/30 leading-relaxed mb-4 line-clamp-2 min-h-[2.5rem]'>
         {repo.description || 'Sin descripción.'}
       </p>
 
-      {/* Topics */}
       {repo.topics.length > 0 && (
         <div className='flex flex-wrap gap-1 mb-3'>
           {repo.topics.slice(0, 3).map(topic => (
@@ -190,40 +233,28 @@ function ProjectCard({ repo }: { repo: EnrichedRepo }) {
         </div>
       )}
 
-      {/* Language bar */}
       {totalBytes > 0 && (
         <div className='flex gap-0.5 mb-4 h-1 rounded-full overflow-hidden'>
           {Object.entries(repo.languages).slice(0, 5).map(([lang, bytes]) => (
-            <div
-              key={lang}
-              className='rounded-full transition-all duration-500'
-              style={{
-                width: `${(bytes / totalBytes) * 100}%`,
-                backgroundColor: langColors[lang] || '#86868b',
-              }}
-            />
+            <div key={lang} className='rounded-full transition-all duration-500'
+              style={{ width: `${(bytes / totalBytes) * 100}%`, backgroundColor: langColors[lang] || '#86868b' }} />
           ))}
         </div>
       )}
 
-      {/* Footer */}
       <div className='flex items-center justify-between text-[10px] text-white/20'>
         <div className='flex items-center gap-3'>
           {repo.primaryLanguage && (
-            <span className='flex items-center gap-1'>
+            <span className='flex items-center gap-1">
               <span className='w-2 h-2 rounded-full' style={{ backgroundColor: color }} />
               {repo.primaryLanguage}
             </span>
           )}
           {repo.stargazers_count > 0 && (
-            <span className='flex items-center gap-0.5'>
-              <Star className='w-3 h-3' /> {repo.stargazers_count}
-            </span>
+            <span className='flex items-center gap-0.5"><Star className='w-3 h-3' /> {repo.stargazers_count}</span>
           )}
           {repo.forks_count > 0 && (
-            <span className='flex items-center gap-0.5'>
-              <GitFork className='w-3 h-3' /> {repo.forks_count}
-            </span>
+            <span className='flex items-center gap-0.5"><GitFork className='w-3 h-3' /> {repo.forks_count}</span>
           )}
         </div>
         <span>{timeAgo()}</span>
