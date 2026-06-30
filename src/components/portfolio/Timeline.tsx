@@ -58,10 +58,10 @@ export default function Timeline() {
             <div className={`ml-15 md:ml-0 md:w-[calc(50%-2rem)] ${
               i % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8'
             }`}>
-              <span className='inline-block liquid-glass-text px-4 py-1 rounded-full text-xs font-mono text-[#1e90ff] tracking-wider mb-2.5'>{item.year}</span>
-              <div className='liquid-glass-text rounded-xl p-6'>
-                <h3 className='text-base font-semibold text-white/80 mb-1.5'>{item.title}</h3>
-                <p className='text-sm text-white/35 leading-relaxed'>{item.description}</p>
+              <span className='inline-block liquid-glass-text px-6 py-1.5 rounded-full text-sm font-mono text-[#1e90ff] tracking-wider mb-4'>{item.year}</span>
+              <div className='liquid-glass rounded-2xl p-9'>
+                <h3 className='text-xl font-semibold text-white/80 mb-2.5'>{item.title}</h3>
+                <p className='text-base text-white/35 leading-relaxed'>{item.description}</p>
               </div>
             </div>
           </div>
