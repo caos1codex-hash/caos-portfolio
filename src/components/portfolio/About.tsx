@@ -39,35 +39,35 @@ export default function About() {
   }, []);
 
   return (
-    <section id='about' className='py-24 md:py-32 section-padding w-full' ref={sectionRef}>
+    <section id='about' className='py-36 md:py-48 section-padding w-full' ref={sectionRef}>
       {/* Label - liquid glass pill */}
-      <div ref={labelRef} className='liquid-glass-text inline-block px-4 py-1.5 rounded-full mb-4'>
-        <p className='text-xs tracking-[0.4em] uppercase text-white/40'>Sobre Mí</p>
+      <div ref={labelRef} className='liquid-glass-text inline-block px-6 py-2.5 rounded-full mb-6'>
+        <p className='text-sm tracking-[0.4em] uppercase text-white/40'>Sobre Mí</p>
       </div>
-      <h2 ref={headingRef} className='text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4'>
+      <h2 ref={headingRef} className='text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6'>
         From Chaos to Code.
       </h2>
-      <div ref={lineRef} className='line-separator w-16 mb-10' />
+      <div ref={lineRef} className='line-separator w-24 mb-15' />
 
-      <div className='grid md:grid-cols-5 gap-10 md:gap-16'>
+      <div className='grid md:grid-cols-5 gap-15 md:gap-24'>
         {/* Text - wrapped in liquid glass block */}
-        <div className='md:col-span-3 space-y-5'>
-          <div ref={p1Ref} className='liquid-glass-text rounded-xl p-5'>
-            <p className='text-sm sm:text-base text-white/50 leading-relaxed'>
+        <div className='md:col-span-3 space-y-8'>
+          <div ref={p1Ref} className='liquid-glass-text rounded-2xl p-8'>
+            <p className='text-base sm:text-lg text-white/50 leading-relaxed'>
               Comencé mi viaje en el mundo de la programación siendo muy joven, autodidacta y con una curiosidad
               insaciable por entender cómo funcionan las cosas. Lo que empezó como un hobby se convirtió en una
               pasión que define quién soy hoy.
             </p>
           </div>
-          <div ref={p2Ref} className='liquid-glass-text rounded-xl p-5'>
-            <p className='text-sm sm:text-base text-white/50 leading-relaxed'>
+          <div ref={p2Ref} className='liquid-glass-text rounded-2xl p-8'>
+            <p className='text-base sm:text-lg text-white/50 leading-relaxed'>
               Disfruto crear experiencias digitales únicas, interfaces limpias y código elegante. Me especializo
               en el ecosistema de JavaScript, desde el frontend con React y Next.js hasta el backend con Node.js,
               siempre buscando el equilibrio perfecto entre diseño y rendimiento.
             </p>
           </div>
-          <div ref={p3Ref} className='liquid-glass-text rounded-xl p-5'>
-            <p className='text-sm sm:text-base text-white/50 leading-relaxed'>
+          <div ref={p3Ref} className='liquid-glass-text rounded-2xl p-8'>
+            <p className='text-base sm:text-lg text-white/50 leading-relaxed'>
               Mi objetivo es convertirte en uno de los mejores desarrolladores de la región, explorando
               constantemente nuevas tecnologías como la inteligencia artificial, los shaders GLSL y las
               experiencias 3D en la web. Cada proyecto es una oportunidad para aprender algo nuevo.
@@ -77,25 +77,25 @@ export default function About() {
 
         {/* Info card - liquid glass */}
         <div ref={cardRef} className='md:col-span-2'>
-          <div className='liquid-glass rounded-2xl p-6 space-y-4'>
+          <div className='liquid-glass rounded-3xl p-9 space-y-6'>
             {INFO.map(({ icon: Icon, label, value }) => (
-              <div key={label} className='flex items-center gap-3.5 relative z-10'>
-                <div className='w-9 h-9 rounded-lg liquid-glass-btn flex items-center justify-center flex-shrink-0'>
-                  <Icon className='w-4 h-4 text-[#1e90ff]' />
+              <div key={label} className='flex items-center gap-5 relative z-10'>
+                <div className='w-14 h-14 rounded-xl liquid-glass-btn flex items-center justify-center flex-shrink-0'>
+                  <Icon className='w-6 h-6 text-[#1e90ff]' />
                 </div>
                 <div>
-                  <p className='text-[11px] uppercase tracking-wider text-white/30'>{label}</p>
-                  <p className='text-sm text-white/75 font-medium'>{value}</p>
+                  <p className='text-xs uppercase tracking-wider text-white/30'>{label}</p>
+                  <p className='text-base text-white/75 font-medium'>{value}</p>
                 </div>
               </div>
             ))}
-            <div className='pt-2 flex items-center gap-3.5 relative z-10'>
-              <div className='w-9 h-9 rounded-lg liquid-glass-btn flex items-center justify-center flex-shrink-0'>
-                <Sparkles className='w-4 h-4 text-[#00d4ff]' />
+            <div className='pt-3 flex items-center gap-5 relative z-10'>
+              <div className='w-14 h-14 rounded-xl liquid-glass-btn flex items-center justify-center flex-shrink-0'>
+                <Sparkles className='w-6 h-6 text-[#00d4ff]' />
               </div>
               <div>
-                <p className='text-[11px] uppercase tracking-wider text-white/30'>Edad</p>
-                <p className='text-sm text-white/75 font-medium'>17 años</p>
+                <p className='text-xs uppercase tracking-wider text-white/30'>Edad</p>
+                <p className='text-base text-white/75 font-medium'>17 años</p>
               </div>
             </div>
           </div>
