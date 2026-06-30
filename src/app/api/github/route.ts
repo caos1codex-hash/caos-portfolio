@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 
+// Static export compatibility
+export const dynamic = 'force-static';
+export const fetchCache = 'force-no-store';
+
 const GITHUB_USERNAME = 'caos1codex-hash';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 const headers: HeadersInit = {
   Accept: 'application/vnd.github.v3+json',
-  ...(GITHUB_TOKEN ? { Authorization: `Bearer ${GITHUB_TOKEN}` } : {}),
 };
 
 async function fetchGitHub<T>(endpoint: string): Promise<T> {
@@ -74,7 +76,6 @@ export async function GET(request: Request) {
       );
       const commitCount = events.filter((e) => e.type === 'PushEvent').length;
 
-      // Fetch all repos to compute totalStars and totalForks
       const allRepos = await fetchGitHub<GitHubRepo[]>(
         `/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`
       );
