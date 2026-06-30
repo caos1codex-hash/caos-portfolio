@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import gsap from 'gsap';
+import { scrollTo } from '@/lib/scroll';
 
 const NAV_ITEMS = [
   { label: 'Inicio', href: '#hero' },
@@ -44,7 +45,7 @@ export default function Navigation() {
 
   const handleClick = useCallback((href: string) => {
     setMobileOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    scrollTo(href);
   }, []);
 
   return (

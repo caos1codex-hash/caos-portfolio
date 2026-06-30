@@ -54,6 +54,10 @@ export default function Home() {
         smoothWheel: true,
       });
 
+      // Expose globally so other components can use lenis.scrollTo()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__lenis = lenis;
+
       function raf(time: number) {
         lenis?.raf(time);
         requestAnimationFrame(raf);
@@ -62,7 +66,10 @@ export default function Home() {
     };
 
     init();
-    return () => { lenis?.destroy(); };
+    return () => {
+      lenis?.destroy();
+      delete (window as any).__lenis;
+    };
   }, [showContent]);
 
   // Refresh ScrollTrigger on scroll

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { ChevronDown, ArrowRight, Send } from 'lucide-react';
 import gsap from 'gsap';
+import { scrollTo } from '@/lib/scroll';
 
 export default function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,7 +145,7 @@ export default function Hero() {
         <div data-hero='buttons' className='flex flex-col sm:flex-row items-center gap-4 mt-10 md:mt-12'>
           <button
             ref={btn1Ref}
-            onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => scrollTo('#projects')}
             onMouseMove={(e) => handleMouseMove(e, btn1Ref)}
             onMouseLeave={() => handleMouseLeave(btn1Ref)}
             className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white text-sm font-medium rounded-xl'
@@ -157,7 +158,7 @@ export default function Hero() {
           </button>
           <button
             ref={btn2Ref}
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => scrollTo('#contact')}
             onMouseMove={(e) => handleMouseMove(e, btn2Ref)}
             onMouseLeave={() => handleMouseLeave(btn2Ref)}
             className='magnetic-btn liquid-glass-btn flex items-center gap-2.5 px-7 py-3.5 text-white/70 hover:text-white text-sm font-medium rounded-xl'
